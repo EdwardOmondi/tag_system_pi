@@ -149,3 +149,8 @@ pi@raspberrypi:~/tag_system_pi $ sudo python3 Read.py
 287853608425
 Edward Omondi
 ```
+
+## Serving the UI
+```
+python -m http.server
+```
