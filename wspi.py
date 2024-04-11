@@ -16,6 +16,8 @@ async def handler(websocket):
     while True:
         id, text = reader.read()
         if id is not None:
+            print(text)
+            print(id)
             await websocket.send(json.dumps(text))
         # print(message)
         # await websocket.send(json.dumps(message))
