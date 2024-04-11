@@ -155,3 +155,5 @@ To run the application, run the following command in your terminal and then go t
 ```
 python -m http.server > http_server.log & python ws.py > ws.log
 ```
+
+
