@@ -32,7 +32,7 @@ async def handler(websocket):
 
 
 async def main():
-    async with websockets.serve(handler, "", 8765)
+    async with websockets.serve(handler, "", 8765):
         await asyncio.Future()  # run forever
 
 
