@@ -198,7 +198,10 @@ pi&#64;raspberrypi:~/tag_system_pi $ sudo python3 Read.py
 Edward Omondi</pre>
       </li>
       <h2>Serving the UI</h2>
-      <pre>python -m http.server</pre>
+      <p>To run the application, run the following command in your terminal and then go to <a
+          href="http://localhost:8000" target="_blank">the app</a> in your browser.</p>
+      <pre>python -m http.server > http_server.log & python ws.py > ws.log
+      </pre>
     </div>
   </div>
 </div>

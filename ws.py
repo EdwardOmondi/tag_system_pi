@@ -3,7 +3,7 @@
 import asyncio
 import websockets
 import json
-import datetime
+import time
 
 
 # import RPi.GPIO as GPIO
@@ -12,14 +12,14 @@ import datetime
 # reader = SimpleMFRC522()
 
 async def handler(websocket):
-    message = {'event': 'rfid_read', 'id': 'testId', 'text': 'testText','timestamp': datetime.datetime.now().isoformat()}
+    message = {'operation': None, 'userId': None, 'braceletId': None,'timestamp': int(time.time() * 1000)}
     while True:
         # id, text = reader.read()
         # if id is not None:
         #     await websocket.send(json.dumps(text))
         print(message)
         await websocket.send(json.dumps(message))
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(5)
         try:
             data = await asyncio.wait_for(websocket.recv(), timeout=0.5)
             if data is not None:

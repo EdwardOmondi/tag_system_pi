@@ -1,0 +1,59 @@
+Starting server
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871285241}
+{'operation': 'write', 'userId': 'Edward Omondi', 'braceletId': '287853608425', 'timestamp': 1712871289801}
+{'operation': 'write', 'userId': 'Edward Omondi', 'braceletId': '287853608425', 'timestamp': 1712871289801}
+Timeout
+{'operation': 'write', 'userId': 'Edward Omondi', 'braceletId': '287853608425', 'timestamp': 1712871289801}
+Timeout
+{'operation': 'write', 'userId': 'Edward Omondi', 'braceletId': '287853608425', 'timestamp': 1712871289801}
+Timeout
+{'operation': 'write', 'userId': 'Edward Omondi', 'braceletId': '287853608425', 'timestamp': 1712871289801}
+Timeout
+{'operation': 'write', 'userId': 'Edward Omondi', 'braceletId': '287853608425', 'timestamp': 1712871289801}
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Timeout
+{'operation': None, 'userId': None, 'braceletId': None, 'timestamp': 1712871317337}
+Ended by user
+GPIO cleanup

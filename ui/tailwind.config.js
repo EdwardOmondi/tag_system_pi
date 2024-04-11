@@ -32,6 +32,73 @@ module.exports = {
           '900': '#60412e',
           '950': '#332017',
         },
+      },
+      animation: {
+        heartbeat: "heartbeat 2s ease  infinite  both",
+        "bg-pan-top": "bg-pan-top 8s ease   both",
+        "bounce-in-fwd": "bounce-in-fwd 1.3s ease   both"
+
+      },
+      keyframes: {
+        "bounce-in-fwd": {
+          "0%": {
+            transform: "scale(0)",
+            "animation-timing-function": "ease-in",
+            opacity: "0"
+          },
+          "38%": {
+            transform: "scale(1)",
+            "animation-timing-function": "ease-out",
+            opacity: "1"
+          },
+          "55%": {
+            transform: "scale(.7)",
+            "animation-timing-function": "ease-in"
+          },
+          "72%,89%,to": {
+            transform: "scale(1)",
+            "animation-timing-function": "ease-out"
+          },
+          "81%": {
+            transform: "scale(.84)",
+            "animation-timing-function": "ease-in"
+          },
+          "95%": {
+            transform: "scale(.95)",
+            "animation-timing-function": "ease-in"
+          }
+        },
+        "bg-pan-top": {
+          "0%": {
+            "background-position": "50% 100%"
+          },
+          to: {
+            "background-position": "50% 0%"
+          }
+        },
+        heartbeat: {
+          "0%": {
+            transform: "scale(1)",
+            "transform-origin": "center center",
+            "animation-timing-function": "ease-out"
+          },
+          "10%": {
+            transform: "scale(.91)",
+            "animation-timing-function": "ease-in"
+          },
+          "17%": {
+            transform: "scale(.98)",
+            "animation-timing-function": "ease-out"
+          },
+          "33%": {
+            transform: "scale(.87)",
+            "animation-timing-function": "ease-in"
+          },
+          "45%": {
+            transform: "scale(1)",
+            "animation-timing-function": "ease-out"
+          }
+        }
       }
     },
   },

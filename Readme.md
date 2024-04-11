@@ -151,6 +151,7 @@ Edward Omondi
 ```
 
 ## Serving the UI
+To run the application, run the following command in your terminal and then go to [the app](http://localhost:8000) in your browser.
 ```
-python -m http.server
+python -m http.server > http_server.log & python ws.py > ws.log
 ```

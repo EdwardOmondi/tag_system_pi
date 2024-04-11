@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { NetworkingService } from '../../networking.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -10,22 +12,20 @@ import { RouterModule } from '@angular/router';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  private networkingService = inject(NetworkingService);
   showMobileMenu = false;
+  serverActive = false;
+  showHeaderLinks = true;
+  $end = new Subject();
 
   ngOnInit() {
-    // // determine window size and if mobile set showMobileMenu to true
-    // const windowWidth = window.innerWidth;
-    // if (windowWidth <= 768) {
-    //   this.showMobileMenu = true;
-    // }
-    // // listen for window resize event
-    // window.addEventListener('resize', () => {
-    //   const windowWidth = window.innerWidth;
-    //   if (windowWidth <= 768) {
-    //     this.showMobileMenu = true;
-    //   } else {
-    //     this.showMobileMenu = false;
-    //   }
-    // });
+    this.networkingService.wsState.pipe(takeUntil(this.$end)).subscribe((state) => {
+      this.serverActive = state;
+    });
+  }
+
+  ngOnDestroy() {
+    this.$end.next(true);
+    this.$end.complete();
   }
 }

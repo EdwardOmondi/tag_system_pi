@@ -1,1 +1,35 @@
-<p>write works!</p>
+@if (data) {
+<app-dialog [data]="data"></app-dialog>
+}
+<div class="flex min-h-full flex-col justify-center px-6 py-24 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <h1 class="mt-10 text-center text-3xl font-bold leading-9 tracking-tight text-gray-900">Fill in the details you want
+      to write below</h1>
+  </div>
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form class="space-y-6" [formGroup]="form">
+      <div>
+        <label for="userId" class="block text-sm font-medium leading-6 text-gray-900">User Id</label>
+        <div class="mt-2">
+          <input formControlName="userId" id="userId" name="userId" type="userId" autocomplete="userId" required
+            class="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div>
+        <label for="braceletId" class="block text-sm font-medium leading-6 text-gray-900">Bracelet Id</label>
+        <div class="mt-2">
+          <input formControlName="braceletId" id="braceletId" name="braceletId" type="braceletId"
+            autocomplete="braceletId" required
+            class="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div>
+        <button type="submit" (click)="submitForm()" [disabled]="!form.valid"
+          class="flex w-full justify-center rounded-md bg-primary-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
