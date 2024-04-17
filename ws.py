@@ -10,16 +10,23 @@ import time
 # from mfrc522 import SimpleMFRC522
 
 # reader = SimpleMFRC522()
-
+scannerId=1
+waitTime=6
 async def handler(websocket):
-    message = {'operation': None, 'userId': None, 'braceletId': None,'timestamp': int(time.time() * 1000)}
+    last_submissions = {}
     while True:
+        timestamp = int(time.time() * 1000)
         # id, text = reader.read()
         # if id is not None:
         #     await websocket.send(json.dumps(text))
-        print(message)
-        await websocket.send(json.dumps(message))
-        await asyncio.sleep(5)
+        if id in last_submissions and timestamp - last_submissions[id] < waitTime*1000:
+            print("Submission for this ID must be at least",waitTime," seconds apart.",id)
+        else:
+            last_submissions[id] = timestamp
+            message = {'scannerId': scannerId, 'braceletId': 1,'timestamp': int(time.time() * 1000)}
+            print(message)
+            await websocket.send(json.dumps(message))
+            await asyncio.sleep(5)
         try:
             data = await asyncio.wait_for(websocket.recv(), timeout=0.5)
             if data is not None:

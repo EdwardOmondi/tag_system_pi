@@ -20,7 +20,7 @@ export class WriteComponent {
   data: Data | null = null
 
   form = this.fb.group({
-    userId: ['', Validators.required],
+    scannerId: ['', Validators.required],
     braceletId: ['', Validators.required],
   });
 

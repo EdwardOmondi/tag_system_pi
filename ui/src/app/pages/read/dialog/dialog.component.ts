@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Data } from '../../../models/data';
+import { Data, Response } from '../../../models/data';
 
 @Component({
   selector: 'app-dialog',
@@ -9,5 +9,5 @@ import { Data } from '../../../models/data';
   styleUrl: './dialog.component.scss'
 })
 export class DialogComponent {
-  @Input({ required: true }) data: Data | null = null;
+  @Input({ required: true }) data: Response | null = null;
 }

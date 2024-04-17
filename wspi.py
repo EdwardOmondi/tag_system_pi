@@ -10,15 +10,22 @@ import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 
 reader = SimpleMFRC522()
-
+scannerId=1
+waitTime=10
 async def handler(websocket):
-    message = {'operation': None, 'userId': None, 'braceletId': None,'timestamp': int(time.time() * 1000)}
+    last_submissions = {}
     while True:
         id, text = reader.read()
         if id is not None:
-            print(text)
-            print(id)
-            await websocket.send(json.dumps(text))
+            timestamp = int(time.time() * 1000)
+            if id in last_submissions and timestamp - last_submissions[id] < waitTime*1000:
+                print("Submission for this ID must be at least",waitTime," seconds apart.",id)
+            else:
+                last_submissions[id] = timestamp
+                print(text)
+                print(id)
+                message = {'scannerId': scannerId, 'braceletId': id, 'timestamp': timestamp * 1000}
+                await websocket.send(json.dumps(message))
         # print(message)
         # await websocket.send(json.dumps(message))
         # await asyncio.sleep(5)
