@@ -140,6 +140,7 @@ python3 -m pip install spidev
 
 ```
 python3 -m pip install mfrc522
+python3 -m pip install websockets
 ```
 
 ## Running the scripts
@@ -189,12 +190,13 @@ Edward Omondi
 
 ## Serving the UI
 
-To run the application, run the following commands in your terminal and then go to [the app](http://localhost:8000) in your browser.
+To run the application, run the following commands in your terminal and then go to [the app](http://[username].local) in your browser. Replace `[username]` with the pi username
 
 ### nginx setup
+The application runs on the browser
 ```
 sudo apt-get install nginx
-cp ~/tag_system_pi/* /var/www/html
+sudo cp ~/tag_system_pi/* /var/www/html
 ```
 
 ```
@@ -202,4 +204,3 @@ chmod +x start.sh
 chmod +x stop.sh
 ./start.sh
 ```
-
