@@ -39,8 +39,8 @@ export class ReadComponent {
         this.networkingService.addError('Error scanning tag. ' + data.Message);
       }
     };
-    this.ws.onerror = (event) => {
-      this.networkingService.addError('Reader connection error');
+    this.ws.onerror = (event) => {      
+      this.networkingService.addError('Reader error');
       console.error(event);
     };
     this.ws.onclose = () => {

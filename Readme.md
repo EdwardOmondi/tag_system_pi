@@ -190,17 +190,82 @@ Edward Omondi
 
 ## Serving the UI
 
-To run the application, run the following commands in your terminal and then go to [the app](http://[username].local) in your browser. Replace `[username]` with the pi username
-
 ### nginx setup
-The application runs on the browser
+
+The application runs on the browser so we first setup NGINX to serve it.
+Run the commands below
+
 ```
 sudo apt-get install nginx
 sudo cp ~/tag_system_pi/* /var/www/html
-```
-
-```
+sudo service nginx restart
+cd ~/tag_system_pi
 chmod +x start.sh
 chmod +x stop.sh
 ./start.sh
 ```
+
+All done!
+
+To open the application, go to [http://[username].local](http://[username].local) in your browser. Replace `[username]` with the pi username
+
+## Automatic starting when booted up
+
+To have your script start up automatically every time the Raspberry Pi boots up, you can use systemd, which is a system and service manager for Linux. Here's how you can create a systemd service for your script:
+
+1. Create a systemd service unit file for your script. You can do this by creating a new file ending with `.service` in the `/etc/systemd/system/` directory. For example:
+
+```
+sudo nano /etc/systemd/system/connect_scanner.service
+```
+
+2. Add the following content to the file:
+
+```
+[Unit]
+Description=Connect to scanner on Boot
+After=network.target
+
+[Service]
+ExecStart=/home/[username]/tag_system_pi/start.sh
+WorkingDirectory=/home/[username]/tag_system_pi
+StandardOutput=/home/[username]/tag_system_pi/connect_scanner.log
+StandardError=/home/[username]/tag_system_pi/connect_scanner_error.log
+Restart=always
+User=[username]
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Replace `username` with your username.
+
+3. Save the file and exit the text editor. `Ctrl+X`, then `Y` then `Enter`.
+
+4. Reload systemd to read the new service file:
+
+```
+sudo systemctl daemon-reload
+```
+
+5. Enable the service to start at boot:
+
+```
+sudo systemctl enable connect_scanner.service
+```
+
+6. Start the service:
+>Create the output files first by running the commands below remembering to replace username with  your username
+```
+touch /home/[username]/tag_system_pi/connect_scanner.log
+touch /home/[username]/tag_system_pi/connect_scanner_error.log
+```
+```
+sudo systemctl start connect_scanner.service
+```
+
+Now, your script should start automatically every time the Raspberry Pi boots up. You can also manually start, stop, and check the status of the service using `systemctl`. For example:
+
+- To stop the service: `sudo systemctl stop connect_scanner.service`
+- To check the status of the service: `sudo systemctl status connect_scanner.service`
+- To view the output: `tail -f /home/aims/tag_system_pi/connect_scanner.log`

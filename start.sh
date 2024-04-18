@@ -10,15 +10,13 @@ stop_process() {
     pkill -f "$1"
 }
 
-
 # Check if reader is connected
 if is_process_running "python wspi2.py"; then
     echo "Disconnecting reader..."
     stop_process "python wspi2.py"
 fi
 
-
 # Connect to reader in the background
 echo "Starting WebSocket server..."
-python wspi2.py & 
+nohup python wspi2.py > wspi2.log & 
 
