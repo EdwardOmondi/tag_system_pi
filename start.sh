@@ -11,10 +11,10 @@ stop_process() {
 }
 
 # Check if HTTP server is running
-if is_process_running "python3 -m http.server"; then
-    echo "Stopping HTTP server..."
-    stop_process "python3 -m http.server"
-fi
+# if is_process_running "python3 -m http.server"; then
+#     echo "Stopping HTTP server..."
+#     stop_process "python3 -m http.server"
+# fi
 
 # Check if WebSocket server is running
 if is_process_running "python wspi.py"; then
@@ -23,9 +23,9 @@ if is_process_running "python wspi.py"; then
 fi
 
 # Start HTTP server in the background and redirect output to a log file
-echo "Starting HTTP server..."
+# echo "Starting HTTP server..."
 # python3 -m http.server > http_server.log &
-python3 -m http.server 8000 > server_output.txt 2> server_errors.txt &
+# python3 -m http.server 8000 > server_output.txt 2> server_errors.txt &
 
 # Start WebSocket server in the background and redirect output to a log file
 echo "Starting WebSocket server..."

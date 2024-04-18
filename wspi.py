@@ -36,7 +36,6 @@ async def handler(websocket):
                 last_submissions[id] = timestamp
                 print(text)
                 print(id)
-                
                 message = {'scannerId': scannerId, 'braceletId': id, 'timestamp': timestamp * 1000}
                 await websocket.send(json.dumps(message))
         # print(message)
