@@ -7,7 +7,7 @@ export type Data = {
 export type Response = {
   Result: number;
   Message: string;
-  data: ResponseData;
+  data: ResponseData | null;
 };
 
 type ResponseData = {

@@ -70,9 +70,15 @@
               </svg>
               <span class="sr-only">Success</span>
             </div>
+            @if (data?.data) {
             <p class="mb-4 text-xl font-semibold text-gray-900">
-              Great job. {{ data!.data.user.name }} It was scanned successfully
+              Great job. {{ data!.data!.user.name }} It was scanned successfully
             </p>
+            } @if (data?.Message) {
+            <p class="mb-4 text-xl font-semibold text-gray-900">
+              Message: {{ data!.Message }}
+            </p>
+            }
             <!-- <button data-modal-toggle="successModal" type="button"
               class="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 ">
               Continue

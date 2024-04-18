@@ -27,9 +27,23 @@ export class ReadComponent {
     this.ws.onopen = () => {
       this.networkingService.updateWsState = true;
     };
-    this.ws.onmessage = (event) => {
+    this.ws.onmessage = async (event) => {
       const data: Data = JSON.parse(event.data);
       if (data.scannerId !== undefined) {
+        const body: Response = {
+          Result: 0,
+          Message:
+            data.scannerId +
+            ' scanned ' +
+            data.braceletId +
+            ' at ' +
+            new Date(data.timestamp).toLocaleString(),
+          data: null,
+        };
+        this.data = body;
+        await setTimeout(() => {
+          this.data = null;
+        }, environment.defaultTimeout);
         const formData = new FormData();
         formData.append('bracelet_id', data.braceletId);
         formData.append('scanner_id', data.scannerId);
@@ -47,6 +61,8 @@ export class ReadComponent {
               this.networkingService.addError('Error getting data');
             }
           });
+      } else {
+        this.networkingService.addError('Error scanning tag. Invalid Id');
       }
     };
     this.ws.onerror = (event) => {
