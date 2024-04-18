@@ -24,11 +24,13 @@ fi
 
 # Start HTTP server in the background and redirect output to a log file
 echo "Starting HTTP server..."
-python3 -m http.server > http_server.log &
+# python3 -m http.server > http_server.log &
+python3 -m http.server 8000
 
 # Start WebSocket server in the background and redirect output to a log file
 echo "Starting WebSocket server..."
-python wspi.py > ws.log &
+# python wspi.py > ws.log &
+python wspi.py 
 
 # Open the application in the default web browser
 xdg-open http://localhost:8000
