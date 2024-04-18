@@ -8,14 +8,8 @@ stop_process() {
     pkill -f "$1"
 }
 
-# Check if HTTP server is running
-if is_process_running "python3 -m http.server"; then
-    echo "Stopping HTTP server..."
-    stop_process "python3 -m http.server"
-fi
-
-# Check if WebSocket server is running
-if is_process_running "python wspi.py"; then
-    echo "Stopping WebSocket server..."
-    stop_process "python wspi.py"
+# Check if reader is connected
+if is_process_running "python wspi2.py"; then
+    echo "Disconnecting reader..."
+    stop_process "python wspi2.py"
 fi
