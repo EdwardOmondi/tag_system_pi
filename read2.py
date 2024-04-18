@@ -6,6 +6,7 @@ import subprocess
 import time
 import requests
 
+
 def get_serial_number():
     # Run the command and get the output
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { environment } from '../../environment';
-import { FormGroup, FormControl, Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Data } from '../../models/data';
 import { DialogComponent } from './dialog/dialog.component';
@@ -37,8 +37,13 @@ export class WriteComponent {
       console.log(event.data);
     };
     this.ws.onerror = (event) => {
-      this.networkingService.addError('Error connecting to the WebSocket');
+      this.networkingService.addError('Reader connection error');
       console.error(event);
+    }
+    this.ws.onclose = () => {
+      this.networkingService.addError('Reader disconnected');
+      this.networkingService.updateWsState = false;
+      this.wsInit();
     }
   }
 

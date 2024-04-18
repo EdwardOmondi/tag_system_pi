@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { environment } from '../../environment';
 import { DialogComponent } from './dialog/dialog.component';
-import { Data, Response } from '../../models/data';
+import { Response } from '../../models/data';
 import { NetworkingService } from '../../networking.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
@@ -28,46 +28,25 @@ export class ReadComponent {
       this.networkingService.updateWsState = true;
     };
     this.ws.onmessage = async (event) => {
-      const data: Data = JSON.parse(event.data);
-      if (data.scannerId !== undefined) {
-        const body: Response = {
-          Result: 0,
-          Message:
-            data.scannerId +
-            ' scanned ' +
-            data.braceletId +
-            ' at ' +
-            new Date(data.timestamp).toLocaleString(),
-          data: null,
-        };
-        this.data = body;
-        await setTimeout(() => {
+      const data: Response = JSON.parse(event.data);
+      console.log(data, 'data');
+      if (data.Message === 'Success') {
+        this.data = data;
+        setTimeout(() => {
           this.data = null;
         }, environment.defaultTimeout);
-        const formData = new FormData();
-        formData.append('bracelet_id', data.braceletId);
-        formData.append('scanner_id', data.scannerId);
-        this.http
-          .post<Response>(environment.braceletApi, formData, {
-            observe: 'response',
-          })
-          .subscribe((response) => {
-            if (response.ok) {
-              this.data = response.body;
-              setTimeout(() => {
-                this.data = null;
-              }, environment.defaultTimeout);
-            } else {
-              this.networkingService.addError('Error getting data');
-            }
-          });
       } else {
-        this.networkingService.addError('Error scanning tag. Invalid Id');
+        this.networkingService.addError('Error scanning tag. ' + data.Message);
       }
     };
     this.ws.onerror = (event) => {
-      this.networkingService.addError('Error connecting to the WebSocket');
+      this.networkingService.addError('Reader connection error');
       console.error(event);
+    };
+    this.ws.onclose = () => {
+      this.networkingService.addError('Reader disconnected');
+      this.networkingService.updateWsState = false;
+      this.wsInit();
     };
   }
 
