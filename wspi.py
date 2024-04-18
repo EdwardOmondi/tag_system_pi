@@ -8,9 +8,21 @@ import time
 
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
+import subprocess
 
+def get_serial_number():
+    # Run the command and get the output
+    cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
+
+    # Find the line with the serial number
+    for line in cpuinfo.split('\n'):
+        if line.startswith('Serial'):
+            return line.split(':')[1].strip()
+
+# Set the scannerId to the serial number
+scannerId = get_serial_number()
+print("Scanner ID:", scannerId)
 reader = SimpleMFRC522()
-scannerId=1
 waitTime=10
 async def handler(websocket):
     last_submissions = {}
