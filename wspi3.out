@@ -1,0 +1,2 @@
+/home/aims/.local/lib/python3.9/site-packages/mfrc522/MFRC522.py:151: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
+  GPIO.setup(pin_rst, GPIO.OUT)
