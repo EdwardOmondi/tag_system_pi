@@ -11,12 +11,13 @@ stop_process() {
 }
 
 # Check if reader is connected
-if is_process_running "python wspi2.py"; then
+if is_process_running "python wspi3.py"; then
     echo "Disconnecting reader..."
-    stop_process "python wspi2.py"
+    stop_process "python wspi3.py"
 fi
 
 # Connect to reader in the background
 echo "Starting WebSocket server..."
-nohup python wspi2.py > wspi2.log & 
+source env/bin/activate
+nohup python wspi3.py > wspi3.log & 
 
