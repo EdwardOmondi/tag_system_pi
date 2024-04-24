@@ -39,8 +39,8 @@ async def handle_rfid_scan(websocket, path):
                     print('response: ', response, '\n')
                     await websocket.send(json.dumps(response.json()))
                 else:
-                    print('response: ', response.raw, '\n')
-                    await websocket.send(json.dumps({'error': 'Failed to submit data'}))
+                    print('response: ', response.content, '\n')
+                    await websocket.send(json.dumps({'Message': 'Failed to submit data'}))
 
 async def main():
     try:
