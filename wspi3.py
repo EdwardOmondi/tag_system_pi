@@ -35,7 +35,7 @@ async def handle_rfid_scan(websocket, path):
                     'scanner_id': scanner_id,
                 }
                 response = requests.post('https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet', data=formData)
-                print('response: ', response.json(), '\n')
+                print('response: ', response, '\n')
                 await websocket.send(json.dumps(response.json()))
 
 async def main():
