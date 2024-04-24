@@ -136,12 +136,10 @@ source env/bin/activate
 python3 -m pip install spidev
 ```
 
-6. Run the following command to install MFRC522 through pip. This library implements the RFID RC522 interface and it is what enables us to read and write data to the RFID Tags.
+6. Run the following command to install MFRC522 through pip. This library implements the RFID RC522 interface and it is what enables us to read and write data to the RFID Tags.  It will also install all the other requirements needed
 
 ```
-python3 -m pip install mfrc522
-python3 -m pip install websockets
-python3 -m pip install requests
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the scripts
@@ -228,7 +226,7 @@ Description=Connect to scanner on Boot
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 /home/[username]/tag_system_pi/start.sh
+ExecStart=/home/[username]/tag_system_pi/start.sh
 WorkingDirectory=/home/[username]/tag_system_pi
 StandardOutput=/home/[username]/tag_system_pi/connect_scanner.log
 StandardError=/home/[username]/tag_system_pi/connect_scanner_error.log

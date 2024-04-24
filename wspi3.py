@@ -29,10 +29,10 @@ async def handle_rfid_scan(websocket, path):
             else:
                 last_submissions[id] = timestamp
                 formData = {
-                    # 'bracelet_id': 2,
-                    # 'scanner_id': 2,
-                    'bracelet_id':id,
-                    'scanner_id': scanner_id,
+                    'bracelet_id': 2,
+                    'scanner_id': 2,
+                    # 'bracelet_id':id,
+                    # 'scanner_id': scanner_id,
                 }
                 response = requests.post('https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet', data=formData)
                 if response.status_code == 200:

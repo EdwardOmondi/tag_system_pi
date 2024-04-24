@@ -18,8 +18,8 @@ fi
 
 # Connect to reader in the background
 cd ~/tag_system_pi
-echo "Installing requirements..."
-pip install -r requirements.txt
+# echo "Installing requirements..."
+# pip install -r requirements.txt
 echo "Starting WebSocket server..."
 nohup python wspi3.py > wspi3.out 2>&1  </dev/null &
 
