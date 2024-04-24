@@ -48,7 +48,10 @@ export class ReadComponent {
     this.ws.onclose = () => {
       this.networkingService.addError('Reader disconnected');
       this.networkingService.updateWsState = false;
-      this.wsInit();
+      setTimeout(() => {
+        console.log('Reconnecting...');
+        this.wsInit();
+      }, environment.errorTimeout);
     };
   }
 
