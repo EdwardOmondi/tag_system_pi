@@ -25,6 +25,7 @@ export class ReadComponent {
   private wsInit() {
     // this.ws = new WebSocket(environment.wsUrl);
     this.ws = new WebSocket('ws://192.168.1.15:8765');
+    console.log(this.ws.url, 'ws url');
     this.ws.onopen = () => {
       this.networkingService.updateWsState = true;
       console.log('Reader connected');

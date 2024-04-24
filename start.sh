@@ -18,6 +18,7 @@ fi
 
 # Connect to reader in the background
 echo "Starting WebSocket server..."
-source env/bin/activate
+cd ~/tag_system_pi
+pip install -r requirements.txt
 nohup python wspi3.py > wspi3.out 2>&1  </dev/null &
 

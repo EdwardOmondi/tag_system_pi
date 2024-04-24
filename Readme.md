@@ -228,7 +228,7 @@ Description=Connect to scanner on Boot
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python /home/[username]/tag_system_pi/start.sh
+ExecStart=/usr/bin/python3 /home/[username]/tag_system_pi/start.sh
 WorkingDirectory=/home/[username]/tag_system_pi
 StandardOutput=/home/[username]/tag_system_pi/connect_scanner.log
 StandardError=/home/[username]/tag_system_pi/connect_scanner_error.log
@@ -270,3 +270,4 @@ Now, your script should start automatically every time the Raspberry Pi boots up
 - To stop the service: `sudo systemctl stop connect_scanner.service`
 - To check the status of the service: `sudo systemctl status connect_scanner.service`
 - To view the output: `tail -f /home/aims/tag_system_pi/connect_scanner.log`
+- To view the output: `tail -f /home/aims/tag_system_pi/wspi3.out`
