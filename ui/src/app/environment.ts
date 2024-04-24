@@ -5,3 +5,4 @@ export const environment = {
   braceletApi:
     'https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet',
 };
+ 

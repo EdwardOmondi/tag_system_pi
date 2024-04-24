@@ -23,9 +23,11 @@ export class ReadComponent {
   }
 
   private wsInit() {
-    this.ws = new WebSocket(environment.wsUrl);
+    // this.ws = new WebSocket(environment.wsUrl);
+    this.ws = new WebSocket('ws://192.168.1.15:8765');
     this.ws.onopen = () => {
       this.networkingService.updateWsState = true;
+      console.log('Reader connected');
     };
     this.ws.onmessage = async (event) => {
       const data: Response = JSON.parse(event.data);
@@ -39,7 +41,7 @@ export class ReadComponent {
         this.networkingService.addError('Error scanning tag. ' + data.Message);
       }
     };
-    this.ws.onerror = (event) => {      
+    this.ws.onerror = (event) => {
       this.networkingService.addError('Reader error');
       console.error(event);
     };
