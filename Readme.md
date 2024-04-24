@@ -141,6 +141,7 @@ python3 -m pip install spidev
 ```
 python3 -m pip install mfrc522
 python3 -m pip install websockets
+python3 -m pip install requests
 ```
 
 ## Running the scripts
