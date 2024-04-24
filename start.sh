@@ -17,8 +17,9 @@ if is_process_running "python wspi3.py"; then
 fi
 
 # Connect to reader in the background
-echo "Starting WebSocket server..."
 cd ~/tag_system_pi
+echo "Installing requirements..."
 pip install -r requirements.txt
+echo "Starting WebSocket server..."
 nohup python wspi3.py > wspi3.out 2>&1  </dev/null &
 
