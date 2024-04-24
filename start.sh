@@ -19,5 +19,5 @@ fi
 # Connect to reader in the background
 echo "Starting WebSocket server..."
 source env/bin/activate
-nohup python wspi3.py > wspi3.log & 
+nohup python wspi3.py > wspi3.out 2>&1  </dev/null &
 
