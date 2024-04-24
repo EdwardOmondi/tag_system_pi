@@ -41,7 +41,8 @@ async def handle_rfid_scan(websocket, path):
 async def main():
     try:
         print("Starting server")
-        await websockets.serve(handle_rfid_scan, "", 8765)
+        async with websockets.serve(handle_rfid_scan, "", 8765):
+            await asyncio.Future()
     except KeyboardInterrupt:
         print("Ended by user")
     except websockets.exceptions.ConnectionClosed:
