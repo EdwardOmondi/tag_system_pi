@@ -28,6 +28,7 @@ async def handle_rfid_scan(websocket, path):
                 print("Submission for this ID must be at least", waitTime, " seconds apart.", id)
             else:
                 last_submissions[id] = timestamp
+                await websocket.send(json.dumps({'Result': -1,'Message': 'Bracelet scanned. Analyzing data...'}))
                 formData = {
                     'bracelet_id': 2,
                     'scanner_id': 2,

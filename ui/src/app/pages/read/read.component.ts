@@ -4,11 +4,12 @@ import { DialogComponent } from './dialog/dialog.component';
 import { Response } from '../../models/data';
 import { NetworkingService } from '../../networking.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { PendingComponent } from './pending/pending.component';
 
 @Component({
   selector: 'app-read',
   standalone: true,
-  imports: [DialogComponent, HttpClientModule],
+  imports: [DialogComponent, HttpClientModule, PendingComponent],
   templateUrl: './read.component.html',
   styleUrl: './read.component.scss',
 })
@@ -17,6 +18,7 @@ export class ReadComponent {
   private http = inject(HttpClient);
   private ws!: WebSocket;
   data: Response | null = null;
+  pendingData: Response | null = null;
 
   ngOnInit() {
     this.wsInit();
@@ -33,26 +35,32 @@ export class ReadComponent {
     this.ws.onmessage = async (event) => {
       const data: Response = JSON.parse(event.data);
       console.log(data, 'data');
-      if (data.Message === 'Success') {
+      if (data.Result === 1) {
+        this.pendingData = null;
         this.data = data;
         setTimeout(() => {
           this.data = null;
         }, environment.defaultTimeout);
+      } else if (data.Result === -1) {
+        this.pendingData = data;
       } else {
+        this.pendingData = null;
         this.networkingService.addError('Error scanning tag. ' + data.Message);
       }
     };
     this.ws.onerror = (event) => {
+      this.pendingData = null;
       this.networkingService.addError('Reader error');
       console.error(event);
     };
     this.ws.onclose = () => {
+      this.pendingData = null;
       this.networkingService.addError('Reader disconnected');
       this.networkingService.updateWsState = false;
       setTimeout(() => {
         console.log('Reconnecting...');
         this.wsInit();
-      }, environment.errorTimeout*2);
+      }, environment.errorTimeout * 2);
     };
   }
 

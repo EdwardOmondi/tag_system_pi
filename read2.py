@@ -43,7 +43,7 @@ try:
             print(text)
             # write to a file
             with open('/var/www/html/bracelet_id.txt','w') as f:
-                f.write(str(id))
+                f.write(str(response.json()))
 except KeyboardInterrupt:
     print("Ended by user")
 finally:
