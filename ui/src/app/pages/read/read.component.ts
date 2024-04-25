@@ -52,7 +52,7 @@ export class ReadComponent {
       setTimeout(() => {
         console.log('Reconnecting...');
         this.wsInit();
-      }, environment.errorTimeout);
+      }, environment.errorTimeout*2);
     };
   }
 
