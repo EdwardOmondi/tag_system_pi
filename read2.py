@@ -42,7 +42,7 @@ try:
             print(id)
             print(text)
             # write to a file
-            with open('/var/www/html/assets/bracelet_id.txt','w') as f:
+            with open('/var/www/html/bracelet_id.txt','w') as f:
                 f.write(str(id))
 except KeyboardInterrupt:
     print("Ended by user")
