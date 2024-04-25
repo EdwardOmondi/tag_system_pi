@@ -25,7 +25,9 @@ async def handle_rfid_scan(websocket, path):
         if id is not None:
             timestamp = int(time.time() * 1000)
             if id in last_submissions and timestamp - last_submissions[id] < waitTime*1000:
-                print("Submission for this ID must be at least", waitTime, " seconds apart.", id)
+                errorMessage="Please wait at least "+str(waitTime)+" seconds before you try scanning again."
+                print(errorMessage, id)
+                await websocket.send(json.dumps({'Result': -2,'Message': errorMessage}))
             else:
                 last_submissions[id] = timestamp
                 await websocket.send(json.dumps({'Result': -1,'Message': 'Bracelet scanned. Analyzing data...'}))

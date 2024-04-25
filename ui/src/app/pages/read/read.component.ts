@@ -43,6 +43,8 @@ export class ReadComponent {
         }, environment.defaultTimeout);
       } else if (data.Result === -1) {
         this.pendingData = data;
+      } else if (data.Result === -2) {
+        this.networkingService.addError(data.Message);
       } else {
         this.pendingData = null;
         this.networkingService.addError('Error scanning tag. ' + data.Message);
