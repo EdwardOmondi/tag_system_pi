@@ -41,6 +41,9 @@ try:
                 print(response.text)
             print(id)
             print(text)
+            # write to a file
+            with open('bracelet_id.txt','w') as f:
+                f.write(str(id))
 except KeyboardInterrupt:
     print("Ended by user")
 finally:

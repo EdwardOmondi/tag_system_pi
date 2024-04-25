@@ -136,7 +136,7 @@ source env/bin/activate
 python3 -m pip install spidev
 ```
 
-6. Run the following command to install MFRC522 through pip. This library implements the RFID RC522 interface and it is what enables us to read and write data to the RFID Tags.  It will also install all the other requirements needed
+6. Run the following command to install MFRC522 through pip. This library implements the RFID RC522 interface and it is what enables us to read and write data to the RFID Tags. It will also install all the other requirements needed
 
 ```
 python3 -m pip install -r requirements.txt
@@ -196,7 +196,23 @@ Run the commands below
 
 ```
 sudo apt-get install nginx
-sudo cp ~/tag_system_pi/* /var/www/html
+sudo nano /etc/nginx/sites-available/default
+```
+add the information below after the first `location / { }` area
+```
+        location /tag {
+                root /home/[username]/tag_system_pi;
+                index index.html;
+        }
+```
+
+Test your Nginx configuration:
+```
+sudo nginx -t
+```
+
+then restart nginx for the changes to take effect
+```
 sudo service nginx restart
 cd ~/tag_system_pi
 chmod +x start.sh
@@ -254,11 +270,13 @@ sudo systemctl enable connect_scanner.service
 ```
 
 6. Start the service:
->Create the output files first by running the commands below remembering to replace username with  your username
+   > Create the output files first by running the commands below remembering to replace username with your username
+
 ```
 touch /home/[username]/tag_system_pi/connect_scanner.log
 touch /home/[username]/tag_system_pi/connect_scanner_error.log
 ```
+
 ```
 sudo systemctl start connect_scanner.service
 ```
