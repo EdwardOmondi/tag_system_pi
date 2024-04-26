@@ -242,7 +242,7 @@ Description=Connect to scanner on Boot
 After=network.target
 
 [Service]
-ExecStart=/home/[username]/tag_system_pi/start.sh
+ExecStart=/usr/bin/python /home/[username]/tag_system_pi/wspi3.py
 WorkingDirectory=/home/[username]/tag_system_pi
 StandardOutput=/home/[username]/tag_system_pi/connect_scanner.log
 StandardError=/home/[username]/tag_system_pi/connect_scanner_error.log
