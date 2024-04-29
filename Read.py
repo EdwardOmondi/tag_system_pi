@@ -1,6 +1,7 @@
 from localMFRC522 import MFRC522
 
 reader = MFRC522()
+print('scanner started')
 def read(trailer_block, key, block_addrs):
     (status, TagType) = reader.Request(reader.PICC_REQIDL)
     if status != reader.MI_OK:
