@@ -13,32 +13,46 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
+reader = MFRC522()
+
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
     for line in cpuinfo.split('\n'):
         if line.startswith('Serial'):
             return line.split(':')[1].strip()
+        
+def read(trailer_block, key, block_addrs):
+    (status, TagType) = reader.Request(reader.PICC_REQIDL)
+    if status != reader.MI_OK:
+        return None, None
+    (status, uid) = reader.Anticoll()
+    if status != reader.MI_OK:
+        return None, None
+    id = uid
+    reader.SelectTag(uid)
+    status = reader.Authenticate(
+        reader.PICC_AUTHENT1A, trailer_block , key, uid)
+    data = []
+    text_read = ''
+    if status == reader.MI_OK:
+        for block_num in block_addrs:
+            block = reader.ReadTag(block_num)
+            if block:
+                data += block
+        if data:
+            text_read = ''.join(chr(i) for i in data)
+    reader.StopAuth()
+    return id, text_read
 
 async def handle_rfid_scan(websocket, path):
     scanner_id = get_serial_number()
     logging.info("Scanner ID: %s", scanner_id)    
     await websocket.send(json.dumps({'Result': -3,'Message': scanner_id}))
     # reader = SimpleMFRC522()
-    reader = MFRC522()
     last_submissions = {}
     while True:
-        status, _ = reader.MFRC522_Request(reader.PICC_REQIDL)
-        if status != reader.MI_OK:
-            continue
-        status, backData = reader.MFRC522_Anticoll()
-        buf = reader.MFRC522_Read(0)
-        reader.MFRC522_Request(reader.PICC_HALT)
-        id = None  # Initialize id to None
-        if buf:
-            id = int.from_bytes(buf, byteorder='big')
-            logging.info("Scanned ID: %s", id)
-        # id, text = reader.read()
+        id, text = read(7, [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF], [8])
         if id is not None:
             timestamp = int(time.time() * 1000)
             if id in last_submissions and timestamp - last_submissions[id] < waitTime*1000:
