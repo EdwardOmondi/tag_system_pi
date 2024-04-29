@@ -273,8 +273,8 @@ sudo systemctl enable connect_scanner.service
    > Create the output files first by running the commands below remembering to replace username with your username
 
 ```
-touch /home/[username]/tag_system_pi/connect_scanner.log
-touch /home/[username]/tag_system_pi/connect_scanner_error.log
+touch /home/pi/tag_system_pi/connect_scanner.log
+touch /home/pi/tag_system_pi/connect_scanner_error.log
 ```
 
 ```
