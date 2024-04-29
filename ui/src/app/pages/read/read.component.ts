@@ -19,6 +19,7 @@ export class ReadComponent {
   private ws!: WebSocket;
   data: Response | null = null;
   pendingData: Response | null = null;
+  scannerId: string = '';
 
   ngOnInit() {
     this.wsInit();
@@ -26,7 +27,7 @@ export class ReadComponent {
 
   private wsInit() {
     // this.ws = new WebSocket(environment.wsUrl);
-    this.ws = new WebSocket('ws://192.168.1.15:8765');
+    this.ws = new WebSocket('ws://aims.local:8765');
     console.log(this.ws.url, 'ws url');
     this.ws.onopen = () => {
       this.networkingService.updateWsState = true;
@@ -45,6 +46,8 @@ export class ReadComponent {
         this.pendingData = data;
       } else if (data.Result === -2) {
         this.networkingService.addError(data.Message);
+      } else if (data.Result === -3) {
+        this.scannerId = data.Message;
       } else {
         this.pendingData = null;
         this.networkingService.addError('Error scanning tag. ' + data.Message);

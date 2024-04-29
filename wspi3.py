@@ -8,6 +8,10 @@ import requests
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import subprocess
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -17,7 +21,8 @@ def get_serial_number():
 
 async def handle_rfid_scan(websocket, path):
     scanner_id = get_serial_number()
-    print("Scanner ID:", scanner_id)
+    logging.info("Scanner ID: %s", scanner_id)    
+    await websocket.send(json.dumps({'Result': -3,'Message': scanner_id}))
     reader = SimpleMFRC522()
     last_submissions = {}
     while True:
@@ -26,7 +31,7 @@ async def handle_rfid_scan(websocket, path):
             timestamp = int(time.time() * 1000)
             if id in last_submissions and timestamp - last_submissions[id] < waitTime*1000:
                 errorMessage="Please wait at least "+str(waitTime)+" seconds before you try scanning again."
-                print(errorMessage, id)
+                logging.warning("%s %s", errorMessage, id)
                 await websocket.send(json.dumps({'Result': -2,'Message': errorMessage}))
             else:
                 last_submissions[id] = timestamp
@@ -39,21 +44,21 @@ async def handle_rfid_scan(websocket, path):
                 }
                 response = requests.post('https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet', data=formData)
                 if response.status_code == 200:
-                    print('response: ', response, '\n')
+                    logging.info('response: %s', response.json())
                     await websocket.send(json.dumps(response.json()))
                 else:
-                    print('response: ', response.content, '\n')
+                    logging.error('response: %s', response.content)
                     await websocket.send(json.dumps({'Message': 'Failed to submit data'}))
 
 async def main():
     try:
-        print("Starting server")
+        logging.info("Starting server")
         async with websockets.serve(handle_rfid_scan, "", 8765):
             await asyncio.Future()
     except KeyboardInterrupt:
-        print("Ended by user")
+        logging.info("Ended by user")
     except websockets.exceptions.ConnectionClosed:
-        print("Connection closed Ok")
+        logging.info("Connection closed Ok")
     finally:
         GPIO.cleanup()
 
