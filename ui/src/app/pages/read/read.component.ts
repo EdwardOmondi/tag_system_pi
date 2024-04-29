@@ -26,8 +26,8 @@ export class ReadComponent {
   }
 
   private wsInit() {
-    // this.ws = new WebSocket(environment.wsUrl);
-    this.ws = new WebSocket('ws://aims.local:8765');
+    this.ws = new WebSocket(environment.wsUrl);
+    // this.ws = new WebSocket('ws://aims.local:8765');
     console.log(this.ws.url, 'ws url');
     this.ws.onopen = () => {
       this.networkingService.updateWsState = true;
