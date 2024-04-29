@@ -34,6 +34,7 @@ async def handle_rfid_scan(websocket, path):
         status, backData = reader.MFRC522_Anticoll()
         buf = reader.MFRC522_Read(0)
         reader.MFRC522_Request(reader.PICC_HALT)
+        id = None  # Initialize id to None
         if buf:
             id = int.from_bytes(buf, byteorder='big')
             logging.info("Scanned ID: %s", id)
