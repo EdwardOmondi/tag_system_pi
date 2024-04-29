@@ -26,7 +26,16 @@ async def handle_rfid_scan(websocket, path):
     reader = SimpleMFRC522()
     last_submissions = {}
     while True:
-        id, text = reader.read()
+        status, _ = reader.MFRC522_Request(reader.PICC_REQIDL)
+        if status != reader.MI_OK:
+            continue
+        status, backData = reader.MFRC522_Anticoll()
+        buf = reader.MFRC522_Read(0)
+        reader.MFRC522_Request(reader.PICC_HALT)
+        if buf:
+            id = int.from_bytes(buf, byteorder='big')
+            logging.info("Scanned ID: %s", id)
+        # id, text = reader.read()
         if id is not None:
             timestamp = int(time.time() * 1000)
             if id in last_submissions and timestamp - last_submissions[id] < waitTime*1000:
@@ -60,6 +69,7 @@ async def main():
     except websockets.exceptions.ConnectionClosed:
         logging.info("Connection closed Ok")
     finally:
+        logging.info("Cleaning up GPIO")
         GPIO.cleanup()
 
 if __name__ == "__main__":
