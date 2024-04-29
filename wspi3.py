@@ -7,6 +7,7 @@ import time
 import requests
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
+from mfrc522 import MFRC522
 import subprocess
 import logging
 
@@ -23,7 +24,8 @@ async def handle_rfid_scan(websocket, path):
     scanner_id = get_serial_number()
     logging.info("Scanner ID: %s", scanner_id)    
     await websocket.send(json.dumps({'Result': -3,'Message': scanner_id}))
-    reader = SimpleMFRC522()
+    # reader = SimpleMFRC522()
+    reader = MFRC522()
     last_submissions = {}
     while True:
         status, _ = reader.MFRC522_Request(reader.PICC_REQIDL)
