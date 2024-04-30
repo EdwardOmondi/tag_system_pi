@@ -1,17 +1,35 @@
-@if (data) {
+<!-- @if (data) {
 <app-dialog [data]="data"></app-dialog>
-} @if (pendingData) {
+} -->
+@if (pendingData) {
 <app-pending [pendingMessage]="pendingData.Message"></app-pending>
+} @if (data) {
+<video
+  (ended)="vidEnded()"
+  class="min-w-full min-h-full m-auto"
+  autoplay
+  src="../../../../../assets/video1.mp4"
+  type="video/mp4"
+></video>
+} @else {
+<video
+  class="min-w-full min-h-full m-auto"
+  autoplay
+  loop
+  src="./../../../assets/video2.mp4"
+  type="video/mp4"
+>
+</video>
 }
-<div class="relative isolate px-6 pt-14 lg:px-8">
+<!-- <div class="relative isolate px-6 pt-14 lg:px-8">
   <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
     <div class="text-center">
       <h1
         class="animate-heartbeat text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
       >
-        Hi There. Scan your bracelet 
+        Hi There. Scan your bracelet
       </h1>
-      <p>{{scannerId}}</p>
+      <p>{{ scannerId }}</p>
     </div>
   </div>
-</div>
+</div> -->

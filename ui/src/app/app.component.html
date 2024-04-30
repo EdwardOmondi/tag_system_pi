@@ -1,7 +1,9 @@
 <div class="bg-white min-h-full">
   <app-header></app-header>
   @for (error of errors; track $index) {
-  <app-alert [error]="error"></app-alert>
+  <div class="absolute top-0 left-0 z-auto flex w-full justify-center">
+    <app-alert class="" [error]="error"></app-alert>
+  </div>
   }
   <router-outlet></router-outlet>
 </div>

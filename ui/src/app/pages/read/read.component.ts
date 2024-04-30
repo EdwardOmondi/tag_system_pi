@@ -1,4 +1,10 @@
-import { Component, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { environment } from '../../environment';
 import { DialogComponent } from './dialog/dialog.component';
 import { Response } from '../../models/data';
@@ -13,21 +19,25 @@ import { PendingComponent } from './pending/pending.component';
   templateUrl: './read.component.html',
   styleUrl: './read.component.scss',
 })
-export class ReadComponent {
+export class ReadComponent implements OnInit {
   private networkingService = inject(NetworkingService);
-  private http = inject(HttpClient);
   private ws!: WebSocket;
   data: Response | null = null;
   pendingData: Response | null = null;
   scannerId: string = '';
+
+  vidEnded() {
+    console.log('ended');
+    this.data = null;
+  }
 
   ngOnInit() {
     this.wsInit();
   }
 
   private wsInit() {
-    this.ws = new WebSocket(environment.wsUrl);
-    // this.ws = new WebSocket('ws://aims.local:8765');
+    // this.ws = new WebSocket(environment.wsUrl);
+    this.ws = new WebSocket('ws://aims.local:8765');
     console.log(this.ws.url, 'ws url');
     this.ws.onopen = () => {
       this.networkingService.updateWsState = true;
@@ -39,9 +49,6 @@ export class ReadComponent {
       if (data.Result === 1) {
         this.pendingData = null;
         this.data = data;
-        setTimeout(() => {
-          this.data = null;
-        }, environment.defaultTimeout);
       } else if (data.Result === -1) {
         this.pendingData = data;
       } else if (data.Result === -2) {
@@ -55,7 +62,7 @@ export class ReadComponent {
     };
     this.ws.onerror = (event) => {
       this.pendingData = null;
-      this.networkingService.addError('Reader error');
+      // this.networkingService.addError('Reader error');
       console.error(event);
     };
     this.ws.onclose = () => {
