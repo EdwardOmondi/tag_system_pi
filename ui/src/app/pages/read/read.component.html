@@ -2,7 +2,9 @@
 <app-dialog [data]="data"></app-dialog>
 } -->
 @if (pendingData) {
-<app-pending [pendingMessage]="pendingData.Message"></app-pending>
+<div class="absolute top-0 left-0 z-auto flex w-full justify-start">
+  <app-pending [pendingMessage]="pendingData.Message"></app-pending>
+</div>
 } @if (data) {
 <video
   (ended)="vidEnded()"
@@ -18,8 +20,7 @@
   loop
   src="./../../../assets/video2.mp4"
   type="video/mp4"
->
-</video>
+></video>
 }
 <!-- <div class="relative isolate px-6 pt-14 lg:px-8">
   <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
