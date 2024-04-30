@@ -2,7 +2,7 @@ import serial
 import time
 
 # Define the USB port
-usb_port = '/dev/ttyUSB0'  # Use the appropriate USB port
+usb_port = '/dev/ttyAMA1'  # Use the appropriate USB port
 
 # Create a serial object
 ser = serial.Serial(usb_port, baudrate=9600, timeout=1)
