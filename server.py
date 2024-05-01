@@ -21,20 +21,23 @@ async def handler(websocket):
     connected.add(websocket)
     try:
         async for message in websocket:
-            body={'piId': get_serial_number(), 'braceletId': message,'status': 'INITIAL_SCAN','response': None}
+            body={'scanner_id': get_serial_number(), 'bracelet_id': message,'status': 'INITIAL_SCAN','response': None}
             logging.info('\nbody: %s\n', body)
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
-            formData = {
-                    'bracelet_id':id,
-                    'scanner_id': scanner_id,
-            }
-            response = requests.post('https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet', data=formData)
-            body['status'] = 'SCAN_COMPLETE'
-            body['response'] = response.json()
-            logging.info('\nbody: %s\n', body)
-            # Broadcast a message to all connected clients.
-            websockets.broadcast(connected, json.dumps(body))
+            if message is not '-1':
+                formData = {
+                        'bracelet_id':message,
+                        'scanner_id': get_serial_number(),
+                }
+                response = requests.post('https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet', data=formData)
+                body['status'] = 'SCAN_COMPLETE'
+                body['response'] = response.json()
+                logging.info('\nbody: %s\n', body)
+                # Broadcast a message to all connected clients.
+                websockets.broadcast(connected, json.dumps(body))
+            else:
+                logging.info('\nbody: %s\n', body)
     finally:
         # Unregister.
         connected.remove(websocket)
