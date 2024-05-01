@@ -13,6 +13,9 @@ import threading
 connected = set()
 reader = SimpleMFRC522()
 
+id = None  # Initialize id to None
+text = None  # Initialize text to None
+
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
     for line in cpuinfo.split('\n'):
@@ -73,6 +76,11 @@ async def main():
         logging.info('Server stopped by keyboard interrupt')
     except websockets.exceptions.ConnectionClosed:
         logging.info('Connection closed')
+    except Exception as e:
+        logging.error('Error: %s', e)
+    finally:
+        logging.info('Cleaning up GPIO')
+        GPIO.cleanup()
         
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
