@@ -10,6 +10,7 @@ import json
 import logging
 
 connected = set()
+reader = SimpleMFRC522()
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -20,7 +21,6 @@ def get_serial_number():
 async def producer():
     logging.info('producer')
     scannerId = get_serial_number()
-    reader = SimpleMFRC522()
     id, text = reader.read()
     formData = {
         'bracelet_id':id,
