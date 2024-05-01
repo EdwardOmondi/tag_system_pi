@@ -25,7 +25,7 @@ async def handler(websocket):
             logging.info('\nbody: %s\n', body)
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
-            if message is not '-1':
+            if message != '-1':
                 formData = {
                         'bracelet_id':message,
                         'scanner_id': get_serial_number(),
