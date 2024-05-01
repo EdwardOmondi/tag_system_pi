@@ -17,23 +17,32 @@ def get_serial_number():
 
 
 async def handler(websocket):
-    logging.info('Connected: %s', websocket.remote_address)
+    logging.info('\nConnected: %s\n', websocket.remote_address)
+    scannerId = get_serial_number()
+    logging.info('\nScanner ID: %s\n', scannerId)
     # Register.
     connected.add(websocket)
     try:
         async for message in websocket:
-            body={'scanner_id': get_serial_number(), 'bracelet_id': message,'status': 'INITIAL_SCAN','response': None}
+            body={'scanner_id': scannerId, 
+                  'bracelet_id': message,
+                  'status': 'INITIAL_SCAN',
+                  'response': None
+                  }
             logging.info('\nbody: %s\n', body)
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
             if message != '-1':
                 formData = {
                         'bracelet_id':message,
-                        'scanner_id': get_serial_number(),
+                        'scanner_id': scannerId,
                 }
                 response = requests.post('https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet', data=formData)
-                body['status'] = 'SCAN_COMPLETE'
-                body['response'] = response.json()
+                body={'scanner_id': scannerId, 
+                      'bracelet_id': message,
+                      'status': 'SCAN_COMPLETE',
+                      'response': json.dumps(response)
+                      }
                 logging.info('\nbody: %s\n', body)
                 # Broadcast a message to all connected clients.
                 websockets.broadcast(connected, json.dumps(body))
@@ -51,4 +60,7 @@ async def main():
         logging.info("Server stopped")
 
 if __name__ == "__main__":
+    logger = logging.getLogger('websockets')
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())
     asyncio.run(main())
