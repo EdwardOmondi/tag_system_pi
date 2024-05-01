@@ -21,8 +21,10 @@ def get_serial_number():
 async def producer():
     logging.info('producer')
     scannerId = get_serial_number()
-    id, text = reader.read()
+    logging.info('Scanner ID: %s', scannerId)
+    id, text = await reader.read()
     if id is not None:
+        logging.info('RFID detected: %s', id)
         formData = {
             'bracelet_id':id,
             'scanner_id': scannerId,
