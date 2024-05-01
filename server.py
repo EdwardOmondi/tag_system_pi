@@ -21,14 +21,14 @@ def get_serial_number():
             return line.split(':')[1].strip()
         
 async def producer():
-    logging.debug('producer')
+    logging.debug('\nproducer')
     scannerId = get_serial_number()
-    logging.info('Scanner ID: %s', scannerId)
+    logging.info('\nScanner ID: %s', scannerId)
     # Start a new thread to read the RFID tag
     id, text = reader.read()
-    logging.debug('id: %s', id)
+    logging.debug('\nid: %s', id)
     if id is not None:
-        logging.info('RFID detected: %s', id)
+        logging.info('\nRFID detected: %s', id)
         formData = {
             'bracelet_id':id,
             'scanner_id': scannerId,
@@ -37,14 +37,14 @@ async def producer():
         testUrl='https://httpbin.org/post'
         response = requests.post(testUrl, data=formData)
         body = {'piId': scannerId, 'braceletId': id, 'response': response.json()}
-        logging.info('body: %s', body) 
+        logging.info('\nbody: %s', body) 
         id = None
         return json.dumps(body)
     else:
-        logging.debug('No RFID detected')
+        logging.debug('\nNo RFID detected')
 
 async def producer_handler(websocket):
-    logging.debug('producer_handler')
+    logging.debug('\nproducer_handler')
     while True:
         message = await producer()
         await websocket.send(message)
@@ -64,17 +64,17 @@ async def handler(websocket):
 
 async def main():
     try:
-        logging.info('Starting server')
+        logging.info('\nStarting server')
         async with websockets.serve(handler, "", 8765):
             await asyncio.Future()
     except KeyboardInterrupt:
-        logging.info('Server stopped by keyboard interrupt')
+        logging.info('\nServer stopped by keyboard interrupt')
     except websockets.exceptions.ConnectionClosed:
-        logging.info('Connection closed')
+        logging.info('\nConnection closed')
     except Exception as e:
-        logging.error('Error: %s', e)
+        logging.error('\nError: %s', e)
     finally:
-        logging.info('Cleaning up GPIO')
+        logging.info('\nCleaning up GPIO')
         GPIO.cleanup()
         
 if __name__ == "__main__":
