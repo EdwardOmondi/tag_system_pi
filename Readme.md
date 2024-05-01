@@ -203,6 +203,7 @@ add the information below after the first `location / { }` area
         location /tag {
                 root /home/[username]/tag_system_pi;
                 index index.html;
+                try_files $uri$args $uri$args/ /index.html;
         }
 ```
 
