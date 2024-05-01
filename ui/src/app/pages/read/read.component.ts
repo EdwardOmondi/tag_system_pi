@@ -15,9 +15,7 @@ import { Observable } from 'rxjs';
 export class ReadComponent implements OnInit, OnDestroy {
   data: Response | null = null;
   pendingData: Response | null = null;
-  intervalId: any;
-  destroy$: Observable<boolean> = new Observable<any>();
-  websocket: any;
+  websocket= new WebSocket('ws://localhost:8765/');
 
   vidEnded() {
     console.log('ended');
@@ -25,10 +23,18 @@ export class ReadComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('init');
+    this.reconnect();
+  }
+
+   reconnect() {
+    console.log('reconnect');
     this.websocket = new WebSocket('ws://192.168.1.7:8765/');
-    this.websocket.onmessage = (data: string) => {
+    this.websocket.onmessage = (data) => {
       console.log(data);
     };
+    this.websocket.onopen = () => {
+      console.log('connected');      
+    }
   }
 
   ngOnDestroy() {
