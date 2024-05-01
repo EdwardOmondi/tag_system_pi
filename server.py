@@ -57,5 +57,6 @@ async def main():
         await asyncio.Future()  # run forever
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     logging.info('Starting server')
     asyncio.run(main())
