@@ -27,10 +27,10 @@ async def send_message_every_10_seconds(websocket):
 async def handle_rfid_scan(websocket, path):
     scanner_id = get_serial_number()
     logging.info("Scanner ID: %s", scanner_id)    
-    asyncio.create_task(send_message_every_10_seconds(websocket))
     reader = SimpleMFRC522()
     last_submissions = {}
     while True:
+        await websocket.send(json.dumps({'Result': -3,'Message': scanner_id}))
         id, text = reader.read()
         if id is not None:
             timestamp = int(time.time() * 1000)

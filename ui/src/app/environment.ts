@@ -1,5 +1,5 @@
 export const environment = {
-  wsUrl: 'ws://localhost:8765',
+  wsUrl: 'ws://192.168.1.7:8765',
   defaultTimeout: 5000,
   errorTimeout: 5000,
   braceletApi:
