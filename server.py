@@ -8,6 +8,7 @@ import subprocess
 import requests
 import json
 import logging
+import threading
 
 connected = set()
 reader = SimpleMFRC522()
@@ -17,12 +18,17 @@ def get_serial_number():
     for line in cpuinfo.split('\n'):
         if line.startswith('Serial'):
             return line.split(':')[1].strip()
+
+def read_rfid(): 
+    global id, text
+    id, text = reader.read()
         
 async def producer():
-    logging.info('producer')
+    logging.debug('producer')
     scannerId = get_serial_number()
     logging.info('Scanner ID: %s', scannerId)
-    id, text = reader.read()
+    # Start a new thread to read the RFID tag
+    threading.Thread(target=read_rfid).start()
     if id is not None:
         logging.info('RFID detected: %s', id)
         formData = {
@@ -34,12 +40,13 @@ async def producer():
         response = requests.post(testUrl, data=formData)
         body = {'piId': scannerId, 'braceletId': id, 'response': response.json()}
         logging.info('body: %s', body) 
+        id = None
         return json.dumps(body)
     else:
-        logging.info('No RFID detected')
+        logging.debug('No RFID detected')
 
 async def producer_handler(websocket):
-    logging.info('producer_handler')
+    logging.debug('producer_handler')
     while True:
         message = await producer()
         await websocket.send(message)
@@ -63,7 +70,7 @@ async def main():
         async with websockets.serve(handler, "", 8765):
             await asyncio.Future()
     except KeyboardInterrupt:
-        logging.info('Server stopped')
+        logging.info('Server stopped by keyboard interrupt')
     except websockets.exceptions.ConnectionClosed:
         logging.info('Connection closed')
         
