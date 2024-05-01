@@ -58,10 +58,15 @@ async def handler(websocket):
     )
 
 async def main():
-    async with websockets.serve(producer_handler, "", 8765):
-        await asyncio.Future()  # run forever
-
+    try:
+        logging.info('Starting server')
+        async with websockets.serve(handler, "", 8765):
+            await asyncio.Future()
+    except KeyboardInterrupt:
+        logging.info('Server stopped')
+    except websockets.exceptions.ConnectionClosed:
+        logging.info('Connection closed')
+        
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    logging.info('Starting server')
     asyncio.run(main())
