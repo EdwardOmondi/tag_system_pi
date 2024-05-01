@@ -51,7 +51,7 @@ async def handler(websocket):
     )
 
 async def main():
-    async with websockets.serve(handler, "", 8765):
+    async with websockets.serve(producer, "", 8765):
         await asyncio.Future()  # run forever
 
 if __name__ == "__main__":

@@ -9,7 +9,6 @@ import { Socket } from 'ngx-socket-io';
 export class NetworkingService {
   private _wsActive = new BehaviorSubject<boolean>(false);
   private _errors = new BehaviorSubject<string[]>([]);
-  private _ws = new WebSocket(environment.wsUrl);
   
   constructor() {}
 
@@ -38,9 +37,6 @@ export class NetworkingService {
     this._errors.next(errors);
   }
 
-  get ws(): WebSocket {
-    return this._ws;
-  }
   get wsStream(): Observable<boolean> {
     return this._wsActive.asObservable();
   }
