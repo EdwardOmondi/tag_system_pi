@@ -31,16 +31,16 @@ async def handle_rfid_scan(websocket, path):
     last_submissions = {}
     video_stopped = True  # Add a flag to track if the video has stopped
     while True:
-        if not video_stopped:
-            # Listen for incoming messages
-            try:
-                message = await asyncio.wait_for(websocket.recv(), timeout=1.0)
-                data = json.loads(message)
-                if data.get('Message') == 'Video Stopped':
-                    video_stopped = True
-            except asyncio.TimeoutError:
-                pass
-        else:
+        # if not video_stopped:
+        #     # Listen for incoming messages
+        #     try:
+        #         message = await asyncio.wait_for(websocket.recv(), timeout=1.0)
+        #         data = json.loads(message)
+        #         if data.get('Message') == 'Video Stopped':
+        #             video_stopped = True
+        #     except asyncio.TimeoutError:
+        #         pass
+        # else:
             id, text = reader.read()
             await asyncio.sleep(5)  # pause for 10 seconds
             if id is not None:

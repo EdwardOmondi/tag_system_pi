@@ -37,7 +37,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   private wsInit() {
     console.log('Reader connecting home');
     const ws: WebSocket = this.networkingService.ws;
-    ws.send(JSON.stringify({ Result: -3, Message: 'Reader connecting home' }));
+    const body: Response = {
+      Result: 200,
+      Message: 'Video Stopped',
+      data: null,
+    };
+    // ws.send(JSON.stringify(body));
     ws.onopen = () => {
       this.networkingService.updateWsState = true;
       console.log('Reader connected');
@@ -61,7 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.log('Destroying home component');
     const ws: WebSocket = this.networkingService.ws;
-    this.destroy$.pipe(map((value) => value === true))
+    this.destroy$.pipe(map((value) => value === true));
     // this.destroy$.next(true);
     // this.destroy$.complete();
     this.networkingService.updateWsState = false;

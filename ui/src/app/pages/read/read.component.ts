@@ -64,7 +64,7 @@ export class ReadComponent implements OnInit, OnDestroy {
       Message: 'Video Stopped',
       data: null,
     };
-    ws.send(JSON.stringify(body));
+    // ws.send(JSON.stringify(body));
     ws.onopen = () => {
       this.networkingService.updateWsState = true;
       console.log('Reader connected');
