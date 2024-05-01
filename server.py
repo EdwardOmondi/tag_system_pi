@@ -22,16 +22,19 @@ async def producer():
     logging.info('producer')
     scannerId = get_serial_number()
     id, text = reader.read()
-    formData = {
-        'bracelet_id':id,
-        'scanner_id': scannerId,
-    }
-    liveUrl='https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet'
-    testUrl='https://httpbin.org/post'
-    response = requests.post(testUrl, data=formData)
-    body = {'piId': scannerId, 'braceletId': id, 'response': response.json()}
-    logging.info('body: %s', body) 
-    return json.dumps(body)
+    if id is not None:
+        formData = {
+            'bracelet_id':id,
+            'scanner_id': scannerId,
+        }
+        liveUrl='https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet'
+        testUrl='https://httpbin.org/post'
+        response = requests.post(testUrl, data=formData)
+        body = {'piId': scannerId, 'braceletId': id, 'response': response.json()}
+        logging.info('body: %s', body) 
+        return json.dumps(body)
+    else:
+        logging.info('No RFID detected')
 
 async def producer_handler(websocket):
     logging.info('producer_handler')
