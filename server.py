@@ -15,15 +15,16 @@ def get_serial_number():
         if line.startswith('Serial'):
             return line.split(':')[1].strip()
 
+
 async def handler(websocket):
     # Register.
     connected.add(websocket)
     try:
         async for message in websocket:
-            # Broadcast to all connected clients.
             body={'piId': get_serial_number(), 'braceletId': message,'status': 'INITIAL_SCAN','response': None}
             logging.info('\nbody: %s\n', body)
-            await asyncio.wait([ws.send(json.dumps(body)) for ws in connected])
+            # Broadcast a message to all connected clients.
+            websockets.broadcast(connected, json.dumps(body))
             formData = {
                     'bracelet_id':id,
                     'scanner_id': scanner_id,
@@ -32,11 +33,11 @@ async def handler(websocket):
             body['status'] = 'SCAN_COMPLETE'
             body['response'] = response.json()
             logging.info('\nbody: %s\n', body)
-            await asyncio.wait([ws.send(json.dumps(body)) for ws in connected])
+            # Broadcast a message to all connected clients.
+            websockets.broadcast(connected, json.dumps(body))
     finally:
         # Unregister.
         connected.remove(websocket)
-
 async def main():
     async with websockets.serve(handler, "", 8765):
         await asyncio.Future()  # run forever
