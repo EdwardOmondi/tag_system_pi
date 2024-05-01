@@ -6,10 +6,11 @@ from mfrc522 import SimpleMFRC522
 import logging
 import RPi.GPIO as GPIO
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 async def handler():
+    logging.info("\nStarting client\n")
     uri = "ws://0.0.0.0:8765"
     async with websockets.connect(uri) as websocket:
         reader = SimpleMFRC522()
@@ -17,10 +18,9 @@ async def handler():
             while True:
                 logging.debug("\nWaiting for RFID read...\n")
                 id, text = reader.read()
-                logging.info("\nID: {id}\n")
+                logging.info("\nID: %s\n", id)
 
                 await websocket.send(str(id))
-                logging.info("\n>>> {id}\n")
         except KeyboardInterrupt:
             logging.debug("\nEnded by user\n")
         except websockets.exceptions.ConnectionClosedError:
@@ -30,6 +30,6 @@ async def handler():
 
 if __name__ == "__main__":
     logger = logging.getLogger('websockets')
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     asyncio.run(handler())
