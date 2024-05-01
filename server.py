@@ -18,6 +18,7 @@ def get_serial_number():
             return line.split(':')[1].strip()
         
 async def producer():
+    logging.info('producer')
     scannerId = get_serial_number()
     reader = SimpleMFRC522()
     id, text = reader.read()
@@ -33,6 +34,7 @@ async def producer():
     return json.dumps(body)
 
 async def producer_handler(websocket):
+    logging.info('producer_handler')
     while True:
         message = await producer()
         await websocket.send(message)
@@ -51,8 +53,9 @@ async def handler(websocket):
     )
 
 async def main():
-    async with websockets.serve(producer, "", 8765):
+    async with websockets.serve(producer_handler, "", 8765):
         await asyncio.Future()  # run forever
 
 if __name__ == "__main__":
+    logging.info('Starting server')
     asyncio.run(main())
