@@ -38,11 +38,13 @@ async def handler(websocket):
                         'bracelet_id':message,
                         'scanner_id': scannerId,
                 }
-                response = requests.post('https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet', data=formData)
+                liveUrl='https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet'
+                testUrl='https://httpbin.org/post'
+                response = requests.post(testUrl, data=formData)
                 body={'scanner_id': scannerId, 
                       'bracelet_id': message,
                       'status': 'SCAN_COMPLETE',
-                      'response': json.dumps(response.json())
+                      'response': json.dumps(response.text)
                       }
                 logging.info('\nbody: %s\n', body)
                 # Broadcast a message to all connected clients.
