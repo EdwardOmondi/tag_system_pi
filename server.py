@@ -18,7 +18,7 @@ def get_serial_number():
 
 
 async def handler(websocket):
-    logging.info('\nConnected: %s\n', websocket.remote_address)
+    logging.debug('\nConnected: %s\n', websocket.remote_address)
     scannerId = get_serial_number()
     logging.info('\nScanner ID: %s\n', scannerId)
     # Register.
