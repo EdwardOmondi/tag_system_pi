@@ -8,7 +8,7 @@ import logging
 import json
 
 connected = set()
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -42,7 +42,7 @@ async def handler(websocket):
                 body={'scanner_id': scannerId, 
                       'bracelet_id': message,
                       'status': 'SCAN_COMPLETE',
-                      'response': json.dumps(response)
+                      'response': json.dumps(response.json())
                       }
                 logging.info('\nbody: %s\n', body)
                 # Broadcast a message to all connected clients.
@@ -62,6 +62,6 @@ async def main():
 
 if __name__ == "__main__":
     logger = logging.getLogger('websockets')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     asyncio.run(main())
