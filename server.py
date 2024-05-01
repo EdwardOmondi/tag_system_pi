@@ -17,6 +17,7 @@ def get_serial_number():
 
 
 async def handler(websocket):
+    logging.info('Connected: %s', websocket.remote_address)
     # Register.
     connected.add(websocket)
     try:
@@ -42,8 +43,12 @@ async def handler(websocket):
         # Unregister.
         connected.remove(websocket)
 async def main():
-    async with websockets.serve(handler, "", 8765):
-        await asyncio.Future()  # run forever
+    try:
+        logging.info("Starting server")
+        async with websockets.serve(handler, "", 8765):
+            await asyncio.Future()  # run forever
+    except KeyboardInterrupt:
+        logging.info("Server stopped")
 
 if __name__ == "__main__":
     asyncio.run(main())
