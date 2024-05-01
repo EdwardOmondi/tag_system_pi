@@ -10,7 +10,6 @@ export class NetworkingService {
   private _wsActive = new BehaviorSubject<boolean>(false);
   private _errors = new BehaviorSubject<string[]>([]);
   private _ws = new WebSocket(environment.wsUrl);
-  // private _ws = new WebSocket(environment.wsTest);
   
   constructor() {}
 

@@ -216,10 +216,8 @@ sudo nano /etc/nginx/sites-available/default
 ```
 add the information below in the first `location / { }` area
 ```
-        location /tag {
-                root /home/[username]/tag_system_pi;
-                index index.html;
-                try_files $uri$args $uri$args/ /index.html;
+        location / {
+                try_files $uri $uri/ /index.html;
         }
 ```
 
