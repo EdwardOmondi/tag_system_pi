@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   destroy$: Observable<boolean> = new Observable<any>();
 
   ngOnInit() {
+    this.wsInit();
     this.networkingService.wsStream
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: boolean) => {

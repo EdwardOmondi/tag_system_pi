@@ -41,6 +41,7 @@ export class ReadComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.wsInit();
     this.networkingService.wsStream
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: boolean) => {
@@ -77,6 +78,7 @@ export class ReadComponent implements OnInit, OnDestroy {
         this.data = data;
       } else if (data.Result === -1) {
         this.pendingData = data;
+        this.data = data;
       } else if (data.Result === -2) {
         this.networkingService.addError(data.Message);
       } else {

@@ -10,7 +10,7 @@ from mfrc522 import SimpleMFRC522
 import subprocess
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -70,4 +70,7 @@ async def main():
 
 if __name__ == "__main__":
     waitTime = 10  # Define waitTime here
+    logger = logging.getLogger('websockets')
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())
     asyncio.run(main())

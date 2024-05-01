@@ -300,5 +300,4 @@ Now, your script should start automatically every time the Raspberry Pi boots up
 
 - To stop the service: `sudo systemctl stop tagscan.service`
 - To check the status of the service: `sudo systemctl status tagscan.service`
-- To view the output: `tail -f /home/aims/tag_system_pi/tagscan.log`
-- To view the output: `tail -f /home/aims/tag_system_pi/wspi.out`
+- To view the output: `journalctl -u tagscan.service -f`
