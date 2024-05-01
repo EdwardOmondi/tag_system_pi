@@ -54,11 +54,11 @@ async def handler(websocket):
         connected.remove(websocket)
 async def main():
     try:
-        logging.info("Starting server")
+        logging.info("\nStarting server\n")
         async with websockets.serve(handler, "", 8765):
             await asyncio.Future()  # run forever
     except KeyboardInterrupt:
-        logging.info("Server stopped")
+        logging.info("\nServer stopped\n")
 
 if __name__ == "__main__":
     logger = logging.getLogger('websockets')
