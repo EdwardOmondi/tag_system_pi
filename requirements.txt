@@ -1,4 +1,4 @@
-spidev==3.5
-mfrc522==0.0.7
-RPi.GPIO==0.7.0
-websockets==12.0
+spidev
+mfrc522
+RPi.GPIO
+websockets

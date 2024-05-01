@@ -48,6 +48,23 @@ On your RFID RC522 you will notice that there are 8 possible connections on it, 
 
 ## Setting up Pi OS for the RFID RC522
 
+### Locale Setup
+```
+sudo nano /etc/default/locale
+```
+
+then paste the  following content
+
+```
+LC_CTYPE="en_GB.UTF-8"
+LC_ALL="en_GB.UTF-8"
+LANG=en_GB.UTF-8
+```
+
+and then continue
+
+###  Config Setup
+
 Follow the steps below to configure your Raspberry Pi and Raspberry Pi OS to utilize the SPI interface that is needed to communicate with the Pi.
 
 1. Let’s begin by first opening the raspi-config tool, and we can do this by opening the terminal and running the following command.
@@ -113,6 +130,7 @@ Before running any command, ensure you are in the right directory. (This is afte
 ```
 cd ~/tag_system_pi
 ```
+> optional start
 
 3. We now create a virtual environment to run our scripts in by running the command below
 
@@ -128,20 +146,16 @@ source env/bin/activate
 
 - After running the above command, you should see your terminal line starts with `(env)`.
 
+> optional end
+
 ## Installing the Packages to Use RFID RC522 on the Pi
 
-5. Run the following command to install spidev through pip. The spidev library helps handle interactions with the SPI.
+5. Run the following command to install all the required packages
 
 ```
-python3 -m pip install spidev
+pip install -r requirements.txt --break-system-packages
 ```
-
-6. Run the following command to install MFRC522 through pip. This library implements the RFID RC522 interface and it is what enables us to read and write data to the RFID Tags. It will also install all the other requirements needed
-
-```
-python3 -m pip install -r requirements.txt
-```
-
+>  optional start
 ## Running the scripts
 
 Before running either script, ensure you are in the right directory, and you are using the virtual environment stored within it
@@ -151,12 +165,14 @@ cd ~/tag_system_pi
 source env/bin/activate
 ```
 
+> optional end
+
 ### Write data to A Tag
 
 1. Run the command below to run the program that writes data to a tag
 
 ```
-python3 Write.py
+python Write.py
 ```
 
 2. You will be asked to write in the new data. Type in whatever you want written to the tag. Press `ENTER` when you are happy with what you have written.
@@ -195,10 +211,10 @@ The application runs on the browser so we first setup NGINX to serve it.
 Run the commands below
 
 ```
-sudo apt-get install nginx
+sudo apt install nginx
 sudo nano /etc/nginx/sites-available/default
 ```
-add the information below after the first `location / { }` area
+add the information below in the first `location / { }` area
 ```
         location /tag {
                 root /home/[username]/tag_system_pi;
@@ -214,11 +230,11 @@ sudo nginx -t
 
 then restart nginx for the changes to take effect
 ```
+sudo systemctl enable nginx
 sudo service nginx restart
+sudo chown -R www-data:[username] /var/www/html/
+sudo chmod -R 770 /var/www/html/
 cd ~/tag_system_pi
-chmod +x start.sh
-chmod +x stop.sh
-./start.sh
 ```
 
 All done!
@@ -232,7 +248,7 @@ To have your script start up automatically every time the Raspberry Pi boots up,
 1. Create a systemd service unit file for your script. You can do this by creating a new file ending with `.service` in the `/etc/systemd/system/` directory. For example:
 
 ```
-sudo nano /etc/systemd/system/connect_scanner.service
+sudo nano /etc/systemd/system/tagscan.service
 ```
 
 2. Add the following content to the file:
@@ -243,10 +259,10 @@ Description=Connect to scanner on Boot
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python /home/[username]/tag_system_pi/wspi3.py
+ExecStart=/usr/bin/python /home/[username]/tag_system_pi/wspi.py
 WorkingDirectory=/home/[username]/tag_system_pi
-StandardOutput=/home/[username]/tag_system_pi/connect_scanner.log
-StandardError=/home/[username]/tag_system_pi/connect_scanner_error.log
+StandardOutput=/home/[username]/tag_system_pi/tagscan.log
+StandardError=/home/[username]/tag_system_pi/tagscan_error.log
 Restart=always
 User=[username]
 
@@ -267,24 +283,24 @@ sudo systemctl daemon-reload
 5. Enable the service to start at boot:
 
 ```
-sudo systemctl enable connect_scanner.service
+sudo systemctl enable tagscan.service
 ```
 
 6. Start the service:
    > Create the output files first by running the commands below remembering to replace username with your username
 
 ```
-touch /home/pi/tag_system_pi/connect_scanner.log
-touch /home/pi/tag_system_pi/connect_scanner_error.log
+touch /home/[username]/tag_system_pi/tagscan.log
+touch /home/[username]/tag_system_pi/tagscan_error.log
 ```
 
 ```
-sudo systemctl start connect_scanner.service
+sudo systemctl start tagscan.service
 ```
 
 Now, your script should start automatically every time the Raspberry Pi boots up. You can also manually start, stop, and check the status of the service using `systemctl`. For example:
 
-- To stop the service: `sudo systemctl stop connect_scanner.service`
-- To check the status of the service: `sudo systemctl status connect_scanner.service`
-- To view the output: `tail -f /home/aims/tag_system_pi/connect_scanner.log`
-- To view the output: `tail -f /home/aims/tag_system_pi/wspi3.out`
+- To stop the service: `sudo systemctl stop tagscan.service`
+- To check the status of the service: `sudo systemctl status tagscan.service`
+- To view the output: `tail -f /home/aims/tag_system_pi/tagscan.log`
+- To view the output: `tail -f /home/aims/tag_system_pi/wspi.out`
