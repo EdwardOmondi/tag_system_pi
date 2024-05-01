@@ -13,25 +13,20 @@ import threading
 connected = set()
 reader = SimpleMFRC522()
 
-id = None  # Initialize id to None
-text = None  # Initialize text to None
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
     for line in cpuinfo.split('\n'):
         if line.startswith('Serial'):
             return line.split(':')[1].strip()
-
-def read_rfid(): 
-    global id, text
-    id, text = reader.read()
         
 async def producer():
     logging.debug('producer')
     scannerId = get_serial_number()
     logging.info('Scanner ID: %s', scannerId)
     # Start a new thread to read the RFID tag
-    threading.Thread(target=read_rfid).start()
+    id, text = reader.read()
+    logging.debug('id: %s', id)
     if id is not None:
         logging.info('RFID detected: %s', id)
         formData = {
