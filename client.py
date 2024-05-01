@@ -6,6 +6,8 @@ from mfrc522 import SimpleMFRC522
 import logging
 import RPi.GPIO as GPIO
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 async def handler():
     uri = "ws://0.0.0.0:8765"

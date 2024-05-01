@@ -8,6 +8,7 @@ import logging
 import json
 
 connected = set()
+logging.basicConfig(level=logging.DEBUG)
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
