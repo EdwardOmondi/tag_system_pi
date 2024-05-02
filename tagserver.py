@@ -45,11 +45,13 @@ async def handler(websocket):
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
             timestamp = int(time.time() * 1000)
+            timeDifference = (timestamp - last_submissions.get(message,timestamp))/1000
             logging.debug('\nMessage: %s\n', message)
             logging.debug('\nLast submissions: %s\n', last_submissions)
             logging.debug('\nTimestamp: %s\n', timestamp)
-            logging.debug('\nTime Difference: %s\n', timestamp - last_submissions.get(message,0))
-            if message in last_submissions and timestamp - last_submissions.get(message,0) < waitTime*1000:
+            logging.debug('\nTime Difference: %s seconds\n', timeDifference)
+            logging.debug('\nWait Time: %s seconds\n', waitTime)
+            if message in last_submissions and timeDifference < waitTime:
                 body={
                     'scanner_id': scannerId, 
                     'bracelet_id': message,
@@ -59,7 +61,7 @@ async def handler(websocket):
                 logging.info('\nbody: %s\n', body)
                 websockets.broadcast(connected, json.dumps(body))                
             else:
-                last_submissions[message] = timestamp
+                last_submissions.update({message: timestamp})
                 formData = {
                         'bracelet_id':message,
                         'scanner_id': scannerId,
