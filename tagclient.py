@@ -13,11 +13,7 @@ async def handler():
     async for websocket in websockets.connect(uri):
         logger.info("\nConnected to server\n")
         try:
-            reader = SimpleMFRC522()
-            logging.debug("\nWaiting for RFID read...\n")
-            id, text = reader.read()
-            logging.info("\nID: %s\n", id)
-            await websocket.send(str(id))
+            await oldScannerReading(websocket)
         except websockets.ConnectionClosed:
             logging.debug("\nConnection closed\n")
             continue
@@ -27,6 +23,13 @@ async def handler():
         except websockets.exceptions.ConnectionClosedError:
             logging.debug("\nConnection closed unexpectedly\n")
             continue
+
+async def oldScannerReading(websocket):
+    reader = SimpleMFRC522()
+    logging.debug("\nWaiting for RFID read...\n")
+    id, text = reader.read()
+    logging.info("\nID: %s\n", id)
+    await websocket.send(str(id))
 
 if __name__ == "__main__":
     logger = logging.getLogger('websockets')
