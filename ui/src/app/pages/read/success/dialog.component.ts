@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
-import { Data, Response } from '../../../models/data';
+import { CloudResponse } from '../../../models/data';
 
 @Component({
   selector: 'app-dialog',
   standalone: true,
   imports: [],
   templateUrl: './dialog.component.html',
-  styleUrl: './dialog.component.scss'
+  styleUrl: './dialog.component.scss',
 })
 export class DialogComponent {
-  @Input({ required: true }) data: Response | null = null;
+  @Input({ required: true }) data: CloudResponse | null = null;
 }

@@ -1,11 +1,14 @@
-<!-- @if (data) {
-<app-dialog [data]="data"></app-dialog>
-} -->
-@if (pendingData) {
-<div class="absolute top-0 left-0 z-auto flex w-full justify-start">
-  <app-pending [pendingMessage]="pendingData.Message"></app-pending>
+@if (cloudResponse) {
+<div class="absolute top-0 left-0 z-auto flex w-full justify-center">
+  <app-dialog [data]="cloudResponse"></app-dialog>
 </div>
-} @if (data) {
+} @if (data && data.status==='INITIAL_SCAN') {
+<div class="absolute top-0 left-0 z-auto flex w-full justify-center">
+  <app-pending
+    [pendingMessage]="'Scan done. Checking details...'"
+  ></app-pending>
+</div>
+} @if (data && data.status==='SCAN_COMPLETE') {
 <video
   (ended)="vidEnded()"
   class="min-w-full min-h-full m-auto"
@@ -34,4 +37,4 @@
     </div>
   </div>
 </div> -->
-<button (click)="reconnect()">Reconnect</button>
+<!-- <button (click)="reconnect()">Reconnect</button> -->

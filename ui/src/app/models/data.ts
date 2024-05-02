@@ -1,16 +1,22 @@
+export type PiResponse = {
+  scanner_id: string;
+  bracelet_id: string;
+  status: 'INITIAL_SCAN' | 'SCAN_COMPLETE' | 'TOO_SOON';
+  response: string;
+};
 export type Data = {
   scannerId: string;
   braceletId: string;
   timestamp: number;
 };
 
-export type Response = {
+export type CloudResponse = {
   Result: number;
   Message: string;
-  data: ResponseData | null;
+  data: RequestResponse | null;
 };
 
-type ResponseData = {
+type RequestResponse = {
   user: User;
   scanner: Scanner;
   bracelets: Bracelets;

@@ -4,6 +4,7 @@
     aria-label="Global"
   >
     <div class="flex lg:flex-1">
+      @if (showHeaderLinks) {
       <a [routerLink]="['/home']" class="-m-1.5 p-1.5">
         <span class="sr-only">Kidsquad RFID System</span>
         <img
@@ -12,6 +13,7 @@
           alt="kidsquad logo"
         />
       </a>
+      }
     </div>
     <div class="flex lg:hidden">
       <button
@@ -37,7 +39,7 @@
       </button>
     </div>
     @if (showHeaderLinks) {
-    <div class="lg:flex lg:gap-x-12">
+    <div class="hidden lg:flex lg:gap-x-12">
       <a
         [routerLink]="['/home']"
         routerLinkActive="text-primary-600"

@@ -8,6 +8,7 @@ import { Socket } from 'ngx-socket-io';
 })
 export class NetworkingService {
   private _wsActive = new BehaviorSubject<boolean>(false);
+  private piId = new BehaviorSubject<string>('');
   private _errors = new BehaviorSubject<string[]>([]);
   
   constructor() {}
@@ -17,6 +18,14 @@ export class NetworkingService {
   }
   set updateWsState(value: boolean) {
     this._wsActive.next(value);
+  }
+
+  get scannerId() {
+    return this.piId.asObservable();
+  }
+
+  set updateScannerId(value: string) {
+    this.piId.next(value);
   }
 
   get errors() {
@@ -35,9 +44,5 @@ export class NetworkingService {
     const errors = this._errors.value;
     errors.splice(index, 1);
     this._errors.next(errors);
-  }
-
-  get wsStream(): Observable<boolean> {
-    return this._wsActive.asObservable();
   }
 }

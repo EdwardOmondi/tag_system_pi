@@ -45,7 +45,7 @@ async def handler(websocket):
                 }
                 liveUrl='https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet'
                 testUrl='https://httpbin.org/post'
-                response = requests.post(testUrl, data=formData)
+                response = requests.post(liveUrl, data=formData)
                 body={
                     'scanner_id': scannerId, 
                     'bracelet_id': message,
