@@ -18,8 +18,6 @@ async def handler():
             id, text = reader.read()
             logging.info("\nID: %s\n", id)
             await websocket.send(str(id))
-        except KeyboardInterrupt:
-            logging.debug("\nEnded by user\n")
         except websockets.ConnectionClosed:
             logging.debug("\nConnection closed\n")
             continue
@@ -29,6 +27,8 @@ async def handler():
         except websockets.exceptions.ConnectionClosedError:
             logging.debug("\nConnection closed unexpectedly\n")
             continue
+        except KeyboardInterrupt:
+            logging.debug("\nEnded by user\n")
         finally:
             GPIO.cleanup()
 
