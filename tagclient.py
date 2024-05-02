@@ -7,7 +7,7 @@ import logging
 import RPi.GPIO as GPIO
 from evdev import InputDevice, categorize, ecodes
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 async def mfrc522Scanner(websocket):
     reader = SimpleMFRC522()
@@ -49,7 +49,7 @@ async def handler():
 
 if __name__ == "__main__":
     logger = logging.getLogger('websockets')
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
     try:
         asyncio.run(handler())
