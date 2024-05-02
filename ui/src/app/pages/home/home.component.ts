@@ -22,11 +22,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.reconnect();
-    this.networkingService.wsState.subscribe((state: boolean) => {
-      if (!state) {
-        this.reconnect();
-      }
-    });
+    // this.networkingService.wsState.subscribe((state: boolean) => {
+    //   if (!state) {
+    //     this.reconnect();
+    //   }
+    // });
     this.networkingService.scannerId.subscribe((id: string) => {
       this.scannerId = id;
     });

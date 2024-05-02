@@ -10,6 +10,7 @@ import time
 
 connected = set()
 logging.basicConfig(level=logging.DEBUG)
+waitTime = 10  # Define waitTime here
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -19,15 +20,21 @@ def get_serial_number():
 
 
 async def handler(websocket):
-    last_submissions = {}
     logging.debug('\nConnected: %s\n', websocket.remote_address)
     scannerId = get_serial_number()
     logging.info('\nScanner ID: %s\n', scannerId)
     # Register.
     connected.add(websocket)
+    body={
+        'scanner_id': scannerId, 
+        'bracelet_id': None,
+        'status': 'INITIAL_CONNECTION',
+        'response': None
+    }
+    websockets.broadcast(connected, json.dumps(body))
     try:
+        last_submissions = {}
         async for message in websocket:
-            timestamp = int(time.time() * 1000)
             body={
                 'scanner_id': scannerId, 
                 'bracelet_id': message,
@@ -37,11 +44,21 @@ async def handler(websocket):
             logging.info('\nbody: %s\n', body)
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
+            timestamp = int(time.time() * 1000)
             logging.debug('\nMessage: %s\n', message)
             logging.debug('\nLast submissions: %s\n', last_submissions)
             logging.debug('\nTimestamp: %s\n', timestamp)
             logging.debug('\nTime Difference: %s\n', timestamp - last_submissions[message])
-            if message in last_submissions and timestamp - last_submissions[message] >= waitTime*1000:
+            if message in last_submissions and timestamp - last_submissions[message] < waitTime*1000:
+                body={
+                    'scanner_id': scannerId, 
+                    'bracelet_id': message,
+                    'status': 'TOO_SOON',
+                    'response': None
+                }
+                logging.info('\nbody: %s\n', body)
+                websockets.broadcast(connected, json.dumps(body))                
+            else:
                 last_submissions[message] = timestamp
                 formData = {
                         'bracelet_id':message,
@@ -59,15 +76,7 @@ async def handler(websocket):
                 logging.info('\nbody: %s\n', body)
                 # Broadcast a message to all connected clients.
                 websockets.broadcast(connected, json.dumps(body))
-            else:
-                body={
-                    'scanner_id': scannerId, 
-                    'bracelet_id': message,
-                    'status': 'TOO_SOON',
-                    'response': None
-                }
-                logging.info('\nbody: %s\n', body)
-                websockets.broadcast(connected, json.dumps(body))
+
     except websockets.ConnectionClosed:
         logging.debug("\nConnection closed\n")
     except websockets.exceptions.ConnectionClosedOK:
@@ -87,7 +96,6 @@ async def main():
         logging.info("\nServer stopped\n")
 
 if __name__ == "__main__":
-    waitTime = 10  # Define waitTime here
     logger = logging.getLogger('websockets')
     logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
