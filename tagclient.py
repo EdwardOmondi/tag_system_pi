@@ -26,7 +26,7 @@ async def usbScanner(websocket):
             if key_event.keystate == key_event.key_down:
                 if key_event.keycode == "KEY_ENTER":
                     logging.info("\nID: %s\n", rfid_id)
-                    await websocket.send(rfid_id)
+                    await websocket.send(str(rfid_id))
                     rfid_id = ""
                 else:
                     rfid_id += key_event.keycode[-1]
