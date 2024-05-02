@@ -64,8 +64,6 @@ async def handler(websocket):
                 }
                 logging.info('\nbody: %s\n', body)
                 websockets.broadcast(connected, json.dumps(body))
-    except KeyboardInterrupt:
-        logging.debug("\nEnded by user\n")
     except websockets.ConnectionClosed:
         logging.debug("\nConnection closed\n")
     except websockets.exceptions.ConnectionClosedOK:
@@ -89,4 +87,7 @@ if __name__ == "__main__":
     logger = logging.getLogger('websockets')
     logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.debug("\nEnded by user\n")

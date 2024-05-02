@@ -27,13 +27,14 @@ async def handler():
         except websockets.exceptions.ConnectionClosedError:
             logging.debug("\nConnection closed unexpectedly\n")
             continue
-        except KeyboardInterrupt:
-            logging.debug("\nEnded by user\n")
-        finally:
-            GPIO.cleanup()
 
 if __name__ == "__main__":
     logger = logging.getLogger('websockets')
     logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
-    asyncio.run(handler())
+    try:
+        asyncio.run(handler())
+    except KeyboardInterrupt:
+        logging.debug("\nEnded by user\n")
+    finally:
+        GPIO.cleanup()
