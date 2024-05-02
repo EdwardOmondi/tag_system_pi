@@ -9,7 +9,7 @@ import json
 import time
 
 connected = set()
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -37,6 +37,10 @@ async def handler(websocket):
             logging.info('\nbody: %s\n', body)
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
+            logging.debug('\nMessage: %s\n', message)
+            logging.debug('\nLast submissions: %s\n', last_submissions)
+            logging.debug('\nTimestamp: %s\n', timestamp)
+            logging.debug('\nTime Difference: %s\n', timestamp - last_submissions[message])
             if message in last_submissions and timestamp - last_submissions[message] >= waitTime*1000:
                 last_submissions[message] = timestamp
                 formData = {
