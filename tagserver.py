@@ -37,7 +37,7 @@ async def handler(websocket):
             logging.info('\nbody: %s\n', body)
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
-            if message in last_submissions and timestamp - last_submissions[message] < waitTime*1000:
+            if message in last_submissions and timestamp - last_submissions[message] >= waitTime*1000:
                 last_submissions[message] = timestamp
                 formData = {
                         'bracelet_id':message,
