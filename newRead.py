@@ -33,7 +33,7 @@
 from evdev import InputDevice, categorize, ecodes
 
 # Change /dev/input/eventX to the correct path for your device.
-dev = InputDevice('/dev/input/eventX')
+dev = InputDevice('/dev/input/mouse0')
 
 print("Starting to read from RFID reader...")
 
