@@ -6,8 +6,7 @@ from mfrc522 import SimpleMFRC522
 import logging
 import RPi.GPIO as GPIO
 
-logging.basicConfig(level=logging.DEBUG)
-
+logging.basicConfig(level=logging.INFO)
 
 async def handler():
     uri = "ws://0.0.0.0:8765"
@@ -35,6 +34,6 @@ async def handler():
 
 if __name__ == "__main__":
     logger = logging.getLogger('websockets')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     asyncio.run(handler())

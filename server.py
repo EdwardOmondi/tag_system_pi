@@ -6,9 +6,11 @@ import requests
 import subprocess
 import logging
 import json
+import time
 
 connected = set()
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
+last_submissions = {}
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -25,15 +27,18 @@ async def handler(websocket):
     connected.add(websocket)
     try:
         async for message in websocket:
-            body={'scanner_id': scannerId, 
-                  'bracelet_id': message,
-                  'status': 'INITIAL_SCAN',
-                  'response': None
-                  }
+            timestamp = int(time.time() * 1000)
+            body={
+                'scanner_id': scannerId, 
+                'bracelet_id': message,
+                'status': 'INITIAL_SCAN',
+                'response': None
+            }
             logging.info('\nbody: %s\n', body)
             # Broadcast a message to all connected clients.
             websockets.broadcast(connected, json.dumps(body))
-            if message != '-1':
+            if message in last_submissions and timestamp - last_submissions[message] < waitTime*1000:
+                last_submissions[message] = timestamp
                 formData = {
                         'bracelet_id':message,
                         'scanner_id': scannerId,
@@ -41,19 +46,36 @@ async def handler(websocket):
                 liveUrl='https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet'
                 testUrl='https://httpbin.org/post'
                 response = requests.post(testUrl, data=formData)
-                body={'scanner_id': scannerId, 
-                      'bracelet_id': message,
-                      'status': 'SCAN_COMPLETE',
-                      'response': json.dumps(response.text)
-                      }
+                body={
+                    'scanner_id': scannerId, 
+                    'bracelet_id': message,
+                    'status': 'SCAN_COMPLETE',
+                    'response': json.dumps(response.text)
+                }
                 logging.info('\nbody: %s\n', body)
                 # Broadcast a message to all connected clients.
                 websockets.broadcast(connected, json.dumps(body))
             else:
+                body={
+                    'scanner_id': scannerId, 
+                    'bracelet_id': message,
+                    'status': 'TOO_SOON',
+                    'response': None
+                }
                 logging.info('\nbody: %s\n', body)
+                websockets.broadcast(connected, json.dumps(body))
+    except KeyboardInterrupt:
+        logging.debug("\nEnded by user\n")
+    except websockets.ConnectionClosed:
+        logging.debug("\nConnection closed\n")
+    except websockets.exceptions.ConnectionClosedOK:
+        logging.debug("\nConnection closed OK\n")
+    except websockets.exceptions.ConnectionClosedError:
+        logging.debug("\nConnection closed unexpectedly\n")
     finally:
         # Unregister.
         connected.remove(websocket)
+
 async def main():
     try:
         logging.info("\nStarting server\n")
@@ -63,7 +85,8 @@ async def main():
         logging.info("\nServer stopped\n")
 
 if __name__ == "__main__":
+    waitTime = 10  # Define waitTime here
     logger = logging.getLogger('websockets')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     asyncio.run(main())
