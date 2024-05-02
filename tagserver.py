@@ -48,8 +48,8 @@ async def handler(websocket):
             logging.debug('\nMessage: %s\n', message)
             logging.debug('\nLast submissions: %s\n', last_submissions)
             logging.debug('\nTimestamp: %s\n', timestamp)
-            logging.debug('\nTime Difference: %s\n', timestamp - last_submissions[message])
-            if message in last_submissions and timestamp - last_submissions[message] < waitTime*1000:
+            logging.debug('\nTime Difference: %s\n', timestamp - last_submissions.get(message,0))
+            if message in last_submissions and timestamp - last_submissions.get(message,0) < waitTime*1000:
                 body={
                     'scanner_id': scannerId, 
                     'bracelet_id': message,
