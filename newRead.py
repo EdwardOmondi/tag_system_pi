@@ -17,16 +17,13 @@
 
 import serial
 
-# Set up the serial port to read from the USB reader.
-serialPort = serial.Serial("/dev/ttyUSB0", 9600, timeout=0.5)
+serialPort = serial.Serial("/dev/tty0", 9600, timeout=0.5)
 
 try:
     while True:
-        # Read from the USB reader until a null character is received.
         command = serialPort.read_until('\0', size=None)
         commandString = command.decode('utf-8')
 
-        # If a command was received, print it.
         if len(commandString) > 0:
             print(commandString)
 
