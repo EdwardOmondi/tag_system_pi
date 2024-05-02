@@ -6,10 +6,11 @@ import subprocess
 import requests
 import json
 import time
-
+import random
+import string
 
 connected = set()
-loggerLevel = logging.DEBUG
+loggerLevel = logging.INFO
 logging.basicConfig(level=loggerLevel)
 waitTime = 10
 last_submissions = {}
@@ -20,7 +21,12 @@ def get_serial_number():
         if line.startswith('Serial'):
             return line.split(':')[1].strip()
 
-def getTimeDifference(braceletId):
+def generate_random_id(length=10):
+    """Generate a random string of fixed length."""
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for _ in range(length))
+
+def getTimeDifference(braceletId:str):
     logging.debug('\nGetting time difference\n')
     timestamp = int(time.time() * 1000)
     timeDifference = (timestamp - last_submissions.get(braceletId,timestamp))/1000
@@ -50,7 +56,7 @@ def sendToConnectedClients(scannerId, braceletId,status, response):
     logging.info('\nbody: %s\n', body)
     websockets.broadcast(connected, json.dumps(body))
 
-def sendToDb(scannerId, braceletId, timestamp):
+def sendToDb(scannerId:str, braceletId:str, timestamp:int):
     last_submissions[braceletId] = timestamp
     formData = {
                 'bracelet_id': braceletId,
@@ -61,7 +67,7 @@ def sendToDb(scannerId, braceletId, timestamp):
     response = requests.post(liveUrl, data=formData)
     return response
        
-async def usbScanner(scannerId):
+async def usbScanner(scannerId:str):
     dev = InputDevice('/dev/input/event0')
     logging.debug("\nWaiting for RFID read...\n")
     braceletId = ""
@@ -82,6 +88,20 @@ async def usbScanner(scannerId):
                     else:
                         braceletId += key_event.keycode[-1]
 
+
+async def testEnv(scannerId:str):
+    logging.debug("\nGenerating random IDs...\n")
+    while True:
+        braceletId = generate_random_id()
+        logging.info("\nID: %s\n", braceletId)
+        sendToConnectedClients(scannerId, braceletId,'INITIAL_SCAN', None)
+        timestamp, timeDifference = getTimeDifference(braceletId)
+        if braceletId in last_submissions and timeDifference < waitTime:
+            sendToConnectedClients(scannerId, braceletId,'TOO_SOON', None)
+        else:
+            response = sendToDb(scannerId, braceletId, timestamp)
+            sendToConnectedClients(scannerId, braceletId,'SCAN_COMPLETE', response)
+        await asyncio.sleep(120)  # wait for 1 second before generating the next ID
 
 async def handler(websocket):
     try:
@@ -108,12 +128,12 @@ async def main():
         logging.debug("\nConnection closed unexpectedly\n")
 
 if __name__ == "__main__":
-    logger1 = logging.getLogger('websockets')
-    logger1.setLevel(loggerLevel)
-    logger1.addHandler(logging.StreamHandler())
-    logger2 = logging.getLogger('evdev')
-    logger2.setLevel(loggerLevel)
-    logger2.addHandler(logging.StreamHandler())
+    # logger1 = logging.getLogger('websockets')
+    # logger1.setLevel(loggerLevel)
+    # logger1.addHandler(logging.StreamHandler())
+    # logger2 = logging.getLogger('evdev')
+    # logger2.setLevel(loggerLevel)
+    # logger2.addHandler(logging.StreamHandler())
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
