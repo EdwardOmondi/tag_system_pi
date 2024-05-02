@@ -15,17 +15,28 @@
 # except KeyboardInterrupt:
 #     print("Ended by user")
 
-import serial
+# import serial
 
-serialPort = serial.Serial("/dev/tty0", 9600, timeout=0.5)
+# serialPort = serial.Serial("/dev/tty0", 9600, timeout=0.5)
 
-try:
-    while True:
-        command = serialPort.read_until('\0', size=None)
-        commandString = command.decode('utf-8')
+# try:
+#     while True:
+#         command = serialPort.read_until('\0', size=None)
+#         commandString = command.decode('utf-8')
 
-        if len(commandString) > 0:
-            print(commandString)
+#         if len(commandString) > 0:
+#             print(commandString)
 
-except KeyboardInterrupt:
-    print("Program terminated")
+# except KeyboardInterrupt:
+#     print("Program terminated")
+
+from evdev import InputDevice, categorize, ecodes
+
+# Change /dev/input/eventX to the correct path for your device.
+dev = InputDevice('/dev/input/eventX')
+
+print("Starting to read from RFID reader...")
+
+for event in dev.read_loop():
+    if event.type == ecodes.EV_KEY:
+        print(categorize(event))
