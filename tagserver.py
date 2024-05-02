@@ -11,6 +11,7 @@ import time
 connected = set()
 logging.basicConfig(level=logging.DEBUG)
 waitTime = 10  # Define waitTime here
+last_submissions = {}
 
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
@@ -33,7 +34,6 @@ async def handler(websocket):
     }
     websockets.broadcast(connected, json.dumps(body))
     try:
-        last_submissions = {}
         async for message in websocket:
             body={
                 'scanner_id': scannerId, 
