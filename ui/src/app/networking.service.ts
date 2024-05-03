@@ -1,17 +1,38 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { environment } from './environment';
-import { Socket } from 'ngx-socket-io';
+import { PiResponse, CloudResponse } from './models/data';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NetworkingService {
   private _wsActive = new BehaviorSubject<boolean>(false);
-  private piId = new BehaviorSubject<string>('');
+  private _piId = new BehaviorSubject<string>('');
   private _errors = new BehaviorSubject<string[]>([]);
-  
-  constructor() {}
+  private _data = new BehaviorSubject<PiResponse | null>(null);
+  private _pendingData = new BehaviorSubject<CloudResponse | null>(null);
+  private _wsUrl = new BehaviorSubject<string>(environment.wsUrl);
+
+  public set wsUrl(v: string) {
+    this._wsUrl.next(v);
+  }
+
+  get data() {
+    return this._data.asObservable();
+  }
+
+  set updateData(value: PiResponse | null) {
+    this._data.next(value);
+  }
+
+  get pendingData() {
+    return this._pendingData.asObservable();
+  }
+
+  set updatePendingData(value: CloudResponse | null) {
+    this._pendingData.next(value);
+  }
 
   get wsState() {
     return this._wsActive.asObservable();
@@ -21,11 +42,11 @@ export class NetworkingService {
   }
 
   get scannerId() {
-    return this.piId.asObservable();
+    return this._piId.asObservable();
   }
 
   set updateScannerId(value: string) {
-    this.piId.next(value);
+    this._piId.next(value);
   }
 
   get errors() {
@@ -44,5 +65,33 @@ export class NetworkingService {
     const errors = this._errors.value;
     errors.splice(index, 1);
     this._errors.next(errors);
+  }
+
+  connect() {
+    this._wsUrl.subscribe((url) => {
+      console.log('connect', 'url', url);
+      const websocket = new WebSocket(url);
+      websocket.onopen = () => {
+        this.updateWsState = true;
+      };
+      websocket.onmessage = (value: MessageEvent<string>) => {
+        if (!this._wsActive.value) {
+          this.updateWsState = true;
+        }
+        this.updateData = JSON.parse(value.data) as PiResponse;
+        this.updateScannerId = (
+          JSON.parse(value.data) as PiResponse
+        ).scanner_id;
+      };
+      websocket.onerror = (event: Event) => {
+        this.addError(`Websocket error: ${event.currentTarget}`);
+      };
+      websocket.onclose = () => {
+        if (this._wsActive.value) {
+          this.updateWsState = false;
+          console.log(`Websocket closed`);
+        }
+      };
+    });
   }
 }

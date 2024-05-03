@@ -1,7 +1,12 @@
 export type PiResponse = {
   scanner_id: string;
   bracelet_id: string;
-  status: 'INITIAL_SCAN' | 'SCAN_COMPLETE' | 'TOO_SOON'|'INITIAL_CONNECTION';
+  status:
+    | 'INITIAL_CONNECTION'
+    | 'INITIAL_SCAN'
+    | 'TOO_SOON'
+    | 'SCAN_COMPLETE'
+    | 'DISCONNECTED';
   response: string;
 };
 export type Data = {

@@ -4,63 +4,35 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environment';
 import { NetworkingService } from '../../networking.service';
 import { PiResponse, CloudResponse } from '../../models/data';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, ReactiveFormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
   private networkingService = inject(NetworkingService);
-  data: PiResponse | null = null;
-  pendingData: CloudResponse | null = null;
-  websocket = new WebSocket('ws://localhost:8765/');
   cloudResponse!: CloudResponse;
   scannerId = '';
+  scannerUrl = new FormControl('');
+  showInput = false;
 
   ngOnInit() {
-    this.reconnect();
-    // this.networkingService.wsState.subscribe((state: boolean) => {
-    //   if (!state) {
-    //     this.reconnect();
-    //   }
-    // });
+    this.networkingService.wsState.subscribe((state: boolean) => {
+      this.showInput = !state;
+    });
+
     this.networkingService.scannerId.subscribe((id: string) => {
       this.scannerId = id;
     });
+    this.networkingService.connect();
   }
 
-  reconnect() {
-    console.log('reconnect');
-    this.websocket = new WebSocket(environment.wsUrl);
-    this.websocket.onopen = () => {
-      this.networkingService.updateWsState = true;
-    };
-    this.websocket.onmessage = (value: MessageEvent<string>) => {
-      this.networkingService.updateWsState = true;
-      this.data = JSON.parse(value.data) as PiResponse;
-      this.networkingService.updateScannerId = this.data.scanner_id;
-      if (this.data.status === 'TOO_SOON') {
-        this.networkingService.addError(
-          `You  must wait at least 10 seconds before scanning again`
-        );
-      } else {
-        this.cloudResponse = JSON.parse(this.data.response) as CloudResponse;
-        console.log(this.cloudResponse);
-      }
-    };
-    this.websocket.onerror = (event) => {
-      this.networkingService.addError(`Websocket error: ${event}`);
-    };
-    this.websocket.onclose = () => {
-      this.networkingService.updateWsState = false;
-      console.log(`Websocket closed`);
-    };
-  }
-
-  ngOnDestroy() {
-    this.websocket.close();
+  connectScanner() {
+    console.log('connectScanner', this.scannerUrl.value);
+    this.networkingService.wsUrl = this.scannerUrl.value as string;
   }
 }
