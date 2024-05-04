@@ -49,13 +49,13 @@ On your RFID RC522 you will notice that there are 8 possible connections on it, 
 ## Setting up Pi OS for the RFID RC522
 
 ### Locale Setup
-```
+```bash
 sudo nano /etc/default/locale
 ```
 
-then paste the  following content
+then paste the following content
 
-```
+```txt
 LC_CTYPE="en_GB.UTF-8"
 LC_ALL="en_GB.UTF-8"
 LANG=en_GB.UTF-8
@@ -63,13 +63,13 @@ LANG=en_GB.UTF-8
 
 and then continue
 
-###  Config Setup
+### Config Setup
 
 Follow the steps below to configure your Raspberry Pi and Raspberry Pi OS to utilize the SPI interface that is needed to communicate with the Pi.
 
 1. Let’s begin by first opening the raspi-config tool, and we can do this by opening the terminal and running the following command.
 
-```
+```bash
 sudo raspi-config
 ```
 
@@ -84,13 +84,13 @@ sudo raspi-config
 - Before the SPI Interface is fully enabled we will first have to restart the Raspberry Pi. To do this first get back to the terminal by pressing `Enter` and then `ESC`.
 - Type the following Linux command into the terminal on your Raspberry Pi to restart your Raspberry Pi.
 
-```
+```bash
 sudo reboot
 ```
 
 6. Once your Raspberry Pi has finished rebooting, we can now check to make sure that it has in fact been enabled. The easiest way to do this is to run the following command to see if `spi_bcm2835` is listed.
 
-```
+```bash
 lsmod | grep spi
 ```
 
@@ -98,7 +98,7 @@ lsmod | grep spi
 
 7. If for some reason the SPI module has not activated, we can edit the boot configuration file manually by running the following command on our Raspberry Pi.
 
-```
+```bash
 sudo nano /boot/config.txt
 ```
 
@@ -112,14 +112,14 @@ sudo nano /boot/config.txt
 
 1. Run the following two commands on your Raspberry Pi to update it and ensure it is running the latest version of all the software.
 
-```
+```bash
 sudo apt update
 sudo apt upgrade
 ```
 
 2. Then run the following command on your Raspberry Pi to install all of the required packages needed for the scripts
 
-```
+```bash
 sudo apt install python3-dev python3-pip python3-venv
 ```
 
@@ -127,20 +127,20 @@ sudo apt install python3-dev python3-pip python3-venv
 
 Before running any command, ensure you are in the right directory. (This is after unzippping the zip file)
 
-```
+```bash
 cd ~/tag_system_pi
 ```
 > optional start
 
 3. We now create a virtual environment to run our scripts in by running the command below
 
-```
+```bash
 python3 -m venv env
 ```
 
 4. Once this is done, use the command below to start utilizing it.
 
-```
+```bash
 source env/bin/activate
 ```
 
@@ -152,15 +152,15 @@ source env/bin/activate
 
 5. Run the following command to install all the required packages
 
-```
+```bash
 pip install -r requirements.txt --break-system-packages
 ```
->  optional start
+> optional start
 ## Running the scripts
 
 Before running either script, ensure you are in the right directory, and you are using the virtual environment stored within it
 
-```
+```bash
 cd ~/tag_system_pi
 source env/bin/activate
 ```
@@ -171,7 +171,7 @@ source env/bin/activate
 
 1. Run the command below to run the program that writes data to a tag
 
-```
+```bash
 python Write.py
 ```
 
@@ -179,7 +179,7 @@ python Write.py
 
 3. With that done, simply place your RFID Tag on top of your RFID RC522 circuit. As soon as it detects it, it will immediately write the new data to the tag. You should see `Written` appear in your command line if it was successful. You can look at an example output below to see what a successful run looks like.
 
-```
+```bash
 pi@raspberrypi:~/tag_system_pi $ sudo python3 Write.py
 New data:Edward Omondi
 Now place your tag to write
@@ -190,14 +190,14 @@ Written
 
 1. Run the command below to run the program that reads data from a tag
 
-```
+```bash
 python3 Read.py
 ```
 
 2. With the script now running, all you need to do is place your RFID Tag on top of your RFID RC522 circuit. As soon as the RFID tag being placed on top is detected, it will immediately read the data and print it back out to you.
-   An example of what a successful output would look like is displayed below.
+  An example of what a successful output would look like is displayed below.
 
-```
+```bash
 pi@raspberrypi:~/tag_system_pi $ sudo python3 Read.py
 287853608425
 Edward Omondi
@@ -210,24 +210,24 @@ Edward Omondi
 The application runs on the browser so we first setup NGINX to serve it.
 Run the commands below
 
-```
+```bash
 sudo apt install nginx
 sudo nano /etc/nginx/sites-available/default
 ```
 add the information below in the first `location / { }` area
-```
-        location / {
-                try_files $uri $uri/ /index.html;
-        }
+```bash
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
 ```
 
 Test your Nginx configuration:
-```
+```bash
 sudo nginx -t
 ```
 
 then restart nginx for the changes to take effect
-```
+```bash
 sudo systemctl enable nginx
 sudo service nginx restart
 sudo chown -R www-data:[username] /var/www/html/
@@ -245,19 +245,19 @@ To have your script start up automatically every time the Raspberry Pi boots up,
 
 1. Create a systemd service unit file for your script. You can do this by creating a new file ending with `.service` in the `/etc/systemd/system/` directory. For example:
 
-```
+```bash
 sudo nano /etc/systemd/system/tagscan.service
 ```
 
 2. Add the following content to the file:
 
-```
+```txt
 [Unit]
 Description=Connect to scanner on Boot
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python /home/[username]/tag_system_pi/wspi.py
+ExecStart=/usr/bin/python /home/[username]/tag_system_pi/tagserver.py
 WorkingDirectory=/home/[username]/tag_system_pi
 StandardOutput=/home/[username]/tag_system_pi/tagscan.log
 StandardError=/home/[username]/tag_system_pi/tagscan_error.log
@@ -274,25 +274,25 @@ Replace `username` with your username.
 
 4. Reload systemd to read the new service file:
 
-```
+```bash
 sudo systemctl daemon-reload
 ```
 
 5. Enable the service to start at boot:
 
-```
+```bash
 sudo systemctl enable tagscan.service
 ```
 
 6. Start the service:
-   > Create the output files first by running the commands below remembering to replace username with your username
+  > Create the output files first by running the commands below remembering to replace username with your username
 
-```
+```bash
 touch /home/[username]/tag_system_pi/tagscan.log
 touch /home/[username]/tag_system_pi/tagscan_error.log
 ```
 
-```
+```bash
 sudo systemctl start tagscan.service
 ```
 
@@ -301,3 +301,17 @@ Now, your script should start automatically every time the Raspberry Pi boots up
 - To stop the service: `sudo systemctl stop tagscan.service`
 - To check the status of the service: `sudo systemctl status tagscan.service`
 - To view the output: `journalctl -u tagscan.service -f`
+ 
+## Replacing the videos
+The videos playing are in `.mp4` format.
+The title of the normal video **MUST ALWAYS BE** `video1.mp4`
+and the title of the success video **MUST ALWAYS BE** `video2.mp4`
+
+To change the video, 
+1. Add them to the same directory as the tag application. You can copy the new video into the tag directory using a flashdrive or download it from the cloud
+2. Ensure they are named correctly as instructed  above
+3. run the commands
+```bash
+cd ~/tag_system_pi
+sudo mv video?.mp4 /var/www/html/assets/
+```

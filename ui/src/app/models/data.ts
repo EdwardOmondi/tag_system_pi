@@ -18,7 +18,7 @@ export type Data = {
 export type CloudResponse = {
   Result: number;
   Message: string;
-  data: RequestResponse | null;
+  data: RequestResponse;
 };
 
 type RequestResponse = {

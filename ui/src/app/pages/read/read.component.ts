@@ -3,8 +3,6 @@ import { DialogComponent } from './success/dialog.component';
 import { PiResponse, CloudResponse } from '../../models/data';
 import { HttpClientModule } from '@angular/common/http';
 import { PendingComponent } from './pending/pending.component';
-import { Observable } from 'rxjs';
-import { environment } from '../../environment';
 import { NetworkingService } from '../../networking.service';
 
 @Component({
@@ -44,7 +42,7 @@ export class ReadComponent implements OnInit {
           break;
         }
         case 'INITIAL_SCAN': {
-          console.log('initial scan', data);
+          // console.log('initial scan', data);
           this.showTempMessage = true;
           break;
         }
@@ -57,14 +55,17 @@ export class ReadComponent implements OnInit {
         }
         case 'SCAN_COMPLETE': {
           console.log('scan complete', data);
-          const validResponse = JSON.parse(data.response) as CloudResponse;
-          if (validResponse.data !== undefined) {
-            this.cloudResponse = validResponse;
+          const innerData = JSON.parse(data.response); // Parse the response string once
+          const parsedData = JSON.parse(innerData) as CloudResponse; // Parse the response string
+          console.log(parsedData.Result, 'parsedData');
+          if (parsedData.Result === 0) {
+            this.networkingService.addError(`${parsedData.Message}`);
+          }
+          if (parsedData.Result === 1) {
+            console.log(parsedData.data, 'parsedData');
+            this.cloudResponse = parsedData;
             this.showSuccessMessage = true;
-          } else {
-            this.networkingService.addError(
-              `No data found for bracelet ${data.bracelet_id}`
-            );
+            this.showSuccessVideo = true;
           }
           break;
         }
@@ -78,36 +79,4 @@ export class ReadComponent implements OnInit {
       }
     });
   }
-
-  // reconnect() {
-  //   console.log('reconnect');
-  //   this.websocket = new WebSocket(environment.wsUrl);
-  //   this.websocket.onopen = () => {
-  //     this.networkingService.updateWsState = true;
-  //   };
-  //   this.websocket.onmessage = (value: MessageEvent<string>) => {
-  //     this.networkingService.updateWsState = true;
-  //     this.data = JSON.parse(value.data) as PiResponse;
-  //     this.networkingService.updateScannerId = this.data.scanner_id;
-  //     if (this.data.status === 'TOO_SOON') {
-  //       this.networkingService.addError(
-  //         `You  must wait at least 10 seconds before scanning again`
-  //       );
-  //     }
-  //     if (this.data.status === 'SCAN_COMPLETE') {
-  //       const validResponse = JSON.parse(this.data.response) as CloudResponse;
-  //       console.log(validResponse.data, 'validResponse');
-  //       if (validResponse.data !== undefined) {
-  //         this.cloudResponse = validResponse;
-  //       }
-  //     }
-  //   };
-  //   this.websocket.onerror = (event) => {
-  //     this.networkingService.addError(`Websocket error: ${event}`);
-  //   };
-  //   this.websocket.onclose = () => {
-  //     this.networkingService.updateWsState = false;
-  //     console.log(`Websocket closed`);
-  //   };
-  // }
 }
