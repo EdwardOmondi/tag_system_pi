@@ -4,6 +4,7 @@ import { PiResponse, CloudResponse } from '../../models/data';
 import { HttpClientModule } from '@angular/common/http';
 import { PendingComponent } from './pending/pending.component';
 import { NetworkingService } from '../../networking.service';
+import { environment } from '../../environment';
 
 @Component({
   selector: 'app-read',
@@ -24,6 +25,8 @@ export class ReadComponent implements OnInit {
     console.log('vid ended');
     this.data = null;
     this.cloudResponse = null;
+    this.showSuccessMessage = false;
+    this.showSuccessVideo = false;
   }
 
   ngOnInit() {
@@ -65,6 +68,9 @@ export class ReadComponent implements OnInit {
             console.log(parsedData.data, 'parsedData');
             this.cloudResponse = parsedData;
             this.showSuccessMessage = true;
+            setTimeout(() => {
+              this.showSuccessMessage = false;
+            }, environment.defaultTimeout);
             this.showSuccessVideo = true;
           }
           break;
