@@ -8,7 +8,7 @@ import json
 import time
 
 connected = set()
-loggerLevel = logging.INFO
+loggerLevel = logging.DEBUG
 logging.basicConfig(level=loggerLevel)
 waitTime = 10
 last_submissions = {}
@@ -16,7 +16,9 @@ last_submissions = {}
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
     for line in cpuinfo.split('\n '):
+        logging.debug('\n Line: %s\n ', line)
         if line.startswith('Serial'):
+            logging.debug('\n Serial: %s\n ', line.split(':')[1].strip())
             return line.split(':')[1].strip()
 
 def getTimeDifference(braceletId:str):
