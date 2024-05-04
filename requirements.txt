@@ -1,4 +1,4 @@
-spidev
-mfrc522
-RPi.GPIO
 websockets
+evdev
+requests
+json
