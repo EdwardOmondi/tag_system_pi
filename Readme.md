@@ -183,5 +183,7 @@ To change the video,
 3. run the commands
 ```bash
 cd ~/tag_system_pi
+sudo rm -rf /var/www/html/assets/video?.mp4
 sudo mv video?.mp4 /var/www/html/assets/
+sudo service nginx restart
 ```
