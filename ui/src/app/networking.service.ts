@@ -84,7 +84,7 @@ export class NetworkingService {
         ).scanner_id;
       };
       websocket.onerror = (event: Event) => {
-        this.addError(`Websocket error: ${event.currentTarget}`);
+        this.addError(`Connection error: ${event.currentTarget}`);
       };
       websocket.onclose = () => {
         if (this._wsActive.value) {
