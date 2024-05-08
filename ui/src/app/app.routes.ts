@@ -8,7 +8,7 @@ import { WriteComponent } from './pages/write/write.component';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/home',
+    redirectTo: '/read',
     pathMatch: 'full'
   },
   {

@@ -55,7 +55,7 @@ export class ReadComponent implements OnInit {
         case 'TOO_SOON': {
           console.log('too soon', data);
           this.networkingService.addError(
-            `You must wait at least 10 seconds before scanning again`
+            `You must wait at least 5 seconds before scanning again`
           );
           break;
         }

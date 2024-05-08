@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
       this.scannerId = id;
       this.showConnecting = false;
     });
-    this.networkingService.connect();
     this.networkingService.errors.subscribe((errors: string[]) => {
       this.showConnecting = false;
     });
