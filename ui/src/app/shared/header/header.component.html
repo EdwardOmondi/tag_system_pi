@@ -75,6 +75,11 @@
       >
         Company
       </a>
+      <p
+        class="rounded-md bg-primary-600 px-3.5 py-2.5 text-xl font-semibold text-white shadow-sm"
+      >
+        {{ scannerId }}
+      </p>
     </div>
     }
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -187,15 +192,13 @@
             >
               Company
             </a>
+            <p
+              class="rounded-md bg-primary-600 px-3.5 py-2.5 text-xl font-semibold text-white shadow-sm"
+            >
+              {{ scannerId }}
+            </p>
           </div>
           <div class="py-6">
-            <a
-              [routerLink]="['/home']"
-              routerLinkActive="text-primary-600"
-              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 sr-only"
-            >
-              Log in
-            </a>
             @if (serverActive) {
             <span class="relative flex h-3 w-3">
               <span

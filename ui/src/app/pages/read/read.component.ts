@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PendingComponent } from './pending/pending.component';
 import { NetworkingService } from '../../networking.service';
 import { environment } from '../../environment';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-read',
@@ -30,6 +31,8 @@ export class ReadComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.networkingService.connect();
+
     this.networkingService.data.subscribe((response) => {
       this.showTempMessage = false;
       this.showSuccessMessage = false;

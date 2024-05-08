@@ -15,12 +15,16 @@ export class HeaderComponent {
   private networkingService = inject(NetworkingService);
   showMobileMenu = false;
   serverActive = false;
-  showHeaderLinks = true;
+  showHeaderLinks = false;
   $end = new Subject();
+  scannerId = '';
 
   ngOnInit() {
     this.networkingService.wsState.pipe(takeUntil(this.$end)).subscribe((state) => {
       this.serverActive = state;
+    });
+    this.networkingService.scannerId.subscribe((id: string) => {
+      this.scannerId = id;
     });
   }
 
