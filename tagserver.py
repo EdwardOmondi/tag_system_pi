@@ -10,7 +10,7 @@ import time
 connected = set()
 loggerLevel = logging.DEBUG
 logging.basicConfig(level=loggerLevel)
-waitTime = 10
+waitTime = 5
 last_submissions = {}
 
 def get_serial_number():

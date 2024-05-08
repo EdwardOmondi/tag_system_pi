@@ -12,7 +12,7 @@ import string
 connected = set()
 loggerLevel = logging.DEBUG
 logging.basicConfig(level=loggerLevel)
-waitTime = 10
+waitTime = 5
 last_submissions = {}
 
 def get_serial_number():
@@ -108,12 +108,6 @@ async def main():
         logging.debug("\n Connection closed unexpectedly\n ")
 
 if __name__ == "__main__":
-    # logger1 = logging.getLogger('websockets')
-    # logger1.setLevel(loggerLevel)
-    # logger1.addHandler(logging.StreamHandler())
-    # logger2 = logging.getLogger('evdev')
-    # logger2.setLevel(loggerLevel)
-    # logger2.addHandler(logging.StreamHandler())
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
