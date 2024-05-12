@@ -187,3 +187,9 @@ sudo rm -rf /var/www/html/assets/video?.mp4
 sudo mv video?.mp4 /var/www/html/assets/
 sudo service nginx restart
 ```
+
+## Opening the website via the  terminal
+To open the website via the terminal,run the following command  in  the terminal
+```bash
+DISPLAY=:0 chromium-browser --start-fullscreen http://raspberrypi.local/read
+```
