@@ -198,6 +198,8 @@ cd ~/tag_system_pi/
 
 ## Replacing the videos
 
+> **_ONLY DO THIS IF YOU WANT TO REPLACE VIDEOS. THIS IS NOT AN INITIAL STEP_**
+
 The videos playing are in `.mp4` format.
 The title of the normal video **MUST ALWAYS BE** `video1.mp4`
 and the title of the success video **MUST ALWAYS BE** `video2.mp4`
@@ -215,8 +217,10 @@ sudo mv video?.mp4 /var/www/html/assets/
 sudo service nginx restart
 ```
 
-## Opening the website via the  terminal
-To open the website via the terminal,run the following command  in  the terminal
+## Opening the website via the terminal
+
+To open the website via the terminal,run the following command in the terminal
+
 ```bash
 DISPLAY=:0 chromium-browser --start-fullscreen http://0.0.0.0/read
 ```
