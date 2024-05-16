@@ -79,6 +79,22 @@ source env/bin/activate
 
 ## Serving the UI
 
+### Setup the Browser
+
+Run the commands below to setup the UI
+
+```bash
+cd ~/tag_system_pi/
+sudo rm -rf /var/www/html/assets*  /var/www/html/favicon*  /var/www/html/index*  /var/www/html/main*  /var/www/html/styles*  /var/www/html/polyfills*
+sudo cp browser.zip /var/www/html/
+cd /var/www/html/
+sudo unzip browser.zip
+sudo cp -r browser/* /var/www/html/
+sudo rm -rf browser*
+sudo service nginx restart
+cd ~/tag_system_pi/
+```
+
 ### nginx setup
 
 The application runs on the browser so we first setup NGINX to serve it.
@@ -179,22 +195,6 @@ Now, your script should start automatically every time the Raspberry Pi boots up
 - To stop the service: `sudo systemctl stop tagscan.service`
 - To check the status of the service: `sudo systemctl status tagscan.service`
 - To view the output: `journalctl -u tagscan.service -f`
-
-## Setup the UI
-
-Run the commands below to setup the UI
-
-```bash
-cd ~/tag_system_pi/
-sudo rm -rf /var/www/html/assets*  /var/www/html/favicon*  /var/www/html/index*  /var/www/html/main*  /var/www/html/styles*  /var/www/html/polyfills*
-sudo cp browser.zip /var/www/html/
-cd /var/www/html/
-sudo unzip browser.zip
-sudo cp -r browser/* /var/www/html/
-sudo rm -rf browser*
-sudo service nginx restart
-cd ~/tag_system_pi/
-```
 
 ## Replacing the videos
 
