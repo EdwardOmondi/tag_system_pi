@@ -2,12 +2,12 @@
 
 ## Introduction
 
-This repository houses  the  code for the tag  raspberry pi system
+This repository houses the code for the tag raspberry pi system
 
 ## Equipment List
 
 - Raspberry Pi
-- FissaiD RFID Reader Writer 
+- FissaiD RFID Reader Writer
 - Internet connection (WiFi/Ethernet)
 
 ## Initial Setup
@@ -20,6 +20,7 @@ git  clone https://github.com/EdwardOmondi/tag_system_pi.git
 ```
 
 ### Locale Setup
+
 ```bash
 sudo nano /etc/default/locale
 ```
@@ -56,12 +57,15 @@ cd ~/tag_system_pi
 ```
 
 ## Installing the Packages
+
 5. Run the following command to install all the required packages
 
 ```bash
 pip install -r requirements.txt --break-system-packages
 ```
+
 > optional start
+
 ## Running the scripts
 
 Before running either script, ensure you are in the right directory, and you are using the virtual environment stored within it
@@ -84,7 +88,9 @@ Run the commands below
 sudo apt install nginx
 sudo nano /etc/nginx/sites-available/default
 ```
+
 add the information below in the first `location / { }` area
+
 ```bash
     location / {
         try_files $uri $uri/ /index.html;
@@ -92,11 +98,13 @@ add the information below in the first `location / { }` area
 ```
 
 Test your Nginx configuration:
+
 ```bash
 sudo nginx -t
 ```
 
 then restart nginx for the changes to take effect
+
 ```bash
 sudo systemctl enable nginx
 sudo service nginx restart
@@ -155,7 +163,7 @@ sudo systemctl enable tagscan.service
 ```
 
 6. Start the service:
-  > Create the output files first by running the commands below remembering to replace username with your username
+   > Create the output files first by running the commands below remembering to replace username with your username
 
 ```bash
 touch /home/[username]/tag_system_pi/tagscan.log
@@ -171,16 +179,35 @@ Now, your script should start automatically every time the Raspberry Pi boots up
 - To stop the service: `sudo systemctl stop tagscan.service`
 - To check the status of the service: `sudo systemctl status tagscan.service`
 - To view the output: `journalctl -u tagscan.service -f`
- 
+
+## Setup the UI
+
+Run the commands below to setup the UI
+
+```bash
+cd ~/tag_system_pi/
+sudo rm -rf /var/www/html/assets*  /var/www/html/favicon*  /var/www/html/index*  /var/www/html/main*  /var/www/html/styles*  /var/www/html/polyfills*
+sudo cp browser.zip /var/www/html/
+cd /var/www/html/
+sudo unzip browser.zip
+sudo cp -r browser/* /var/www/html/
+sudo rm -rf browser*
+sudo service nginx restart
+cd ~/tag_system_pi/
+```
+
 ## Replacing the videos
+
 The videos playing are in `.mp4` format.
 The title of the normal video **MUST ALWAYS BE** `video1.mp4`
 and the title of the success video **MUST ALWAYS BE** `video2.mp4`
 
-To change the video, 
+To change the video,
+
 1. Add them to the same directory as the tag application. You can copy the new video into the tag directory using a flashdrive or download it from the cloud
-2. Ensure they are named correctly as instructed  above
+2. Ensure they are named correctly as instructed above
 3. run the commands
+
 ```bash
 cd ~/tag_system_pi
 sudo rm -rf /var/www/html/assets/video?.mp4
