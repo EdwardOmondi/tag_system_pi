@@ -79,22 +79,6 @@ source env/bin/activate
 
 ## Serving the UI
 
-### Setup the Browser
-
-Run the commands below to setup the UI
-
-```bash
-cd ~/tag_system_pi/
-sudo rm -rf /var/www/html/assets*  /var/www/html/favicon*  /var/www/html/index*  /var/www/html/main*  /var/www/html/styles*  /var/www/html/polyfills*
-sudo cp browser.zip /var/www/html/
-cd /var/www/html/
-sudo unzip browser.zip
-sudo cp -r browser/* /var/www/html/
-sudo rm -rf browser*
-sudo service nginx restart
-cd ~/tag_system_pi/
-```
-
 ### nginx setup
 
 The application runs on the browser so we first setup NGINX to serve it.
@@ -128,7 +112,20 @@ sudo chown -R www-data:[username] /var/www/html/
 sudo chmod -R 770 /var/www/html/
 cd ~/tag_system_pi
 ```
+### Setup the Browser
 
+Run the commands below to setup the UI
+
+```bash
+cd ~/tag_system_pi/
+sudo cp browser.zip /var/www/html/
+cd /var/www/html/
+sudo unzip browser.zip
+sudo cp -r browser/* /var/www/html/
+sudo rm -rf browser*
+sudo service nginx restart
+cd ~/tag_system_pi/
+```
 All done!
 
 To open the application, go to [http://[username].local](http://[username].local) in your browser. Replace `[username]` with the pi username
@@ -223,4 +220,11 @@ To open the website via the terminal,run the following command in the terminal
 
 ```bash
 DISPLAY=:0 chromium-browser --start-fullscreen http://0.0.0.0/read &
+```
+
+## Connect UI to the scanning program
+If the UI is not connected to the scanning program, you will see a red dot on the header bar (for large screens) or the navigation menu (for small  screens).
+To  reconnect it back to the scanning program,go to the `home` page and enter  the address below into the input field and click  connect
+```url
+ws://localhost:8765
 ```
