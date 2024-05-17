@@ -222,5 +222,5 @@ sudo service nginx restart
 To open the website via the terminal,run the following command in the terminal
 
 ```bash
-nohup DISPLAY=:0 chromium-browser --start-fullscreen http://0.0.0.0/read &
+nohup chromium-browser --start-fullscreen http://0.0.0.0/read &
 ```
