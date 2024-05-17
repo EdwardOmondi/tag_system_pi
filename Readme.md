@@ -224,3 +224,10 @@ To open the website via the terminal,run the following command in the terminal
 ```bash
 DISPLAY=:0 chromium-browser --start-fullscreen http://0.0.0.0/read &
 ```
+
+## Connect UI to the scanning program
+If the UI is not connected to the scanning program, you will see a red dot on the header bar (for large screens) or the navigation menu (for small  screens).
+To  reconnect it back to the scanning program,go to the `home` page and enter  the address below into the input field and click  connect
+```url
+ws://localhost:8765
+```
