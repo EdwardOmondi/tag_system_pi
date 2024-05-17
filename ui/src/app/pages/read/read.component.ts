@@ -71,10 +71,11 @@ export class ReadComponent implements OnInit {
             console.log(parsedData.data, 'parsedData');
             this.cloudResponse = parsedData;
             this.showSuccessMessage = true;
+            this.showSuccessVideo = true;
             setTimeout(() => {
               this.showSuccessMessage = false;
+              this.showSuccessVideo = false;
             }, environment.defaultTimeout);
-            this.showSuccessVideo = true;
           }
           break;
         }
