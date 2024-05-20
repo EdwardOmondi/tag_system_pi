@@ -13,6 +13,26 @@ logging.basicConfig(level=loggerLevel)
 waitTime = 5
 last_submissions = {}
 
+def remove_old_submissions(lastSubmissions):
+    logging.debug('\n Removing old submissions\n ')
+    current_time = time.time() * 1000
+    one_hour_in_milliseconds = 60 * 60 * 1000
+    braceletIds_to_remove = []
+
+    for bracelet_id, time_stamp in lastSubmissions.items():
+        logging.debug('\n lastSubmissions: %s\n ', lastSubmissions)
+        logging.debug('\n bracelet_id: %s\n ', bracelet_id)
+        logging.debug('\n time_stamp: %s\n ', time_stamp)
+        logging.debug('\n current_time: %s\n ', current_time)
+        logging.debug('\n difference: %s\n ', current_time - time_stamp)
+        if current_time - time_stamp > one_hour_in_milliseconds:
+            braceletIds_to_remove.append(bracelet_id)
+
+    for id in braceletIds_to_remove:
+        item = lastSubmissions[id]
+        logging.debug('\n Removed: %s\n ', item)
+        del lastSubmissions[id]
+
 def get_serial_number():
     cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
     for line in cpuinfo.split('\n'):
@@ -84,7 +104,7 @@ async def usbScanner(scannerId:str):
                         braceletId += key_event.keycode[-1]
 
 async def handler(websocket):
-    global connected, waitTime, last_submissions
+    # global connected, waitTime, last_submissions
     try:
         if connected:
             logging.debug('\n Clearing connections\n ')
@@ -96,8 +116,11 @@ async def handler(websocket):
         sendToConnectedClients(scannerId, None, 'INITIAL_CONNECTION', None)
         await usbScanner(scannerId)
     finally:
-        connected.remove(websocket)
-        sendToConnectedClients(scannerId, None, 'DISCONNECTED', None)
+        timestamp = int(time.time() * 1000)
+        logging.debug('\n Done: %s\n ', timestamp)
+        remove_old_submissions(last_submissions)
+        # connected.remove(websocket)
+        # sendToConnectedClients(scannerId, None, 'DISCONNECTED', None)
 
 async def main():
     try:

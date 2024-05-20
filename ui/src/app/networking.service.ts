@@ -90,6 +90,7 @@ export class NetworkingService {
         if (this._wsActive.value) {
           this.updateWsState = false;
           console.log(`Websocket closed`);
+          this.connect();
         }
       };
     });

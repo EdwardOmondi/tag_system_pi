@@ -10,10 +10,30 @@ import random
 import string
 
 connected = set()
-loggerLevel = logging.DEBUG
+loggerLevel = logging.INFO
 logging.basicConfig(level=loggerLevel)
 waitTime = 5
 last_submissions = {}
+
+def remove_old_submissions(lastSubmissions):
+    logging.debug('\n Removing old submissions\n ')
+    current_time = time.time() * 1000
+    time_in_milliseconds = 1 * 1000
+    braceletIds_to_remove = []
+
+    for bracelet_id, time_stamp in lastSubmissions.items():
+        logging.debug('\n lastSubmissions: %s\n ', lastSubmissions)
+        logging.debug('\n bracelet_id: %s\n ', bracelet_id)
+        logging.debug('\n time_stamp: %s\n ', time_stamp)
+        logging.debug('\n current_time: %s\n ', current_time)
+        logging.debug('\n difference: %s\n ', current_time - time_stamp)
+        if current_time - time_stamp > time_in_milliseconds:
+            braceletIds_to_remove.append(bracelet_id)
+
+    for id in braceletIds_to_remove:
+        item = lastSubmissions[id]
+        logging.debug('\n Removed: %s\n ', item)
+        del lastSubmissions[id]
 
 def get_serial_number():
     # return '0'
@@ -67,20 +87,19 @@ def sendToDb(scannerId:str, braceletId:str, timestamp:int):
        
 async def testEnv(scannerId:str):
     logging.debug("\n Generating random IDs...\n ")
-    while True:
-        braceletId = generate_random_id()
-        logging.info("\n ID: %s\n ", braceletId)
-        sendToConnectedClients(scannerId, braceletId,'INITIAL_SCAN', None)
-        timestamp, timeDifference = getTimeDifference(braceletId)
-        if braceletId in last_submissions and timeDifference < waitTime:
-            sendToConnectedClients(scannerId, braceletId,'TOO_SOON', None)
-        else:
-            response = sendToDb(scannerId, braceletId, timestamp)
-            sendToConnectedClients(scannerId, braceletId,'SCAN_COMPLETE', response)
-        await asyncio.sleep(10)  # wait for 1 second before generating the next ID
+    braceletId = generate_random_id()
+    logging.info("\n ID: %s\n ", braceletId)
+    sendToConnectedClients(scannerId, braceletId,'INITIAL_SCAN', None)
+    timestamp, timeDifference = getTimeDifference(braceletId)
+    if braceletId in last_submissions and timeDifference < waitTime:
+        sendToConnectedClients(scannerId, braceletId,'TOO_SOON', None)
+    else:
+        response = sendToDb(scannerId, braceletId, timestamp)
+        sendToConnectedClients(scannerId, braceletId,'SCAN_COMPLETE', response)
+    await asyncio.sleep(0.5)  # wait for 1 second before generating the next ID
 
 async def handler(websocket):
-    global connected, waitTime, last_submissions
+    # global connected, waitTime, last_submissions
     try:
         if connected:
             logging.debug('\n Clearing connections\n ')
@@ -92,8 +111,11 @@ async def handler(websocket):
         sendToConnectedClients(scannerId, None, 'INITIAL_CONNECTION', None)
         await testEnv(scannerId)
     finally:
-        connected.remove(websocket)
-        sendToConnectedClients(scannerId, None, 'DISCONNECTED', None)
+        timestamp = int(time.time()*1000)
+        logging.debug('\n Done: %s\n ', timestamp)
+        remove_old_submissions(last_submissions)
+        # connected.remove(websocket)
+        # sendToConnectedClients(scannerId, None, 'DISCONNECTED', None)
 
 async def main():
     try:
