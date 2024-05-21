@@ -43,14 +43,6 @@ def remove_old_submissions(lastSubmissions):
         logging.debug('\n Removed: %s\n ', item)
         del lastSubmissions[id]
 
-def get_serial_number():
-    cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
-    for line in cpuinfo.split('\n'):
-        logging.debug('\n Line: %s\n ', line)
-        if line.startswith('Serial'):
-            logging.debug('\n Serial: %s\n ', line.split(':')[1].strip())
-            return line.split(':')[1].strip()
-
 def getTimeDifference(braceletId:str):
     logging.debug('\n Getting time difference\n ')
     timestamp = int(time.time() * 1000)

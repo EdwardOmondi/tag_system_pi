@@ -50,6 +50,8 @@ export class ReadComponent implements OnInit {
         case 'INITIAL_SCAN': {
           // console.log('initial scan', data);
           this.showTempMessage = true;
+          this.showSuccessMessage = false;
+          this.showSuccessVideo = false;
           break;
         }
         case 'TOO_SOON': {
@@ -74,10 +76,10 @@ export class ReadComponent implements OnInit {
             this.cloudResponse = parsedData;
             this.showSuccessMessage = true;
             this.showSuccessVideo = true;
-            setTimeout(() => {
-              this.showSuccessMessage = false;
-              this.showSuccessVideo = false;
-            }, environment.defaultTimeout);
+            // setTimeout(() => {
+            //   this.showSuccessMessage = false;
+            //   this.showSuccessVideo = false;
+            // }, environment.defaultTimeout);
           }
           break;
         }
