@@ -15,6 +15,12 @@ logging.basicConfig(level=loggerLevel)
 waitTime = 5
 last_submissions = {}
 
+def get_serial_number():
+    # return '0'
+    return '100000002f692899'
+
+scannerId = get_serial_number()
+
 def remove_old_submissions(lastSubmissions):
     logging.debug('\n Removing old submissions\n ')
     current_time = time.time() * 1000
@@ -35,9 +41,7 @@ def remove_old_submissions(lastSubmissions):
         logging.debug('\n Removed: %s\n ', item)
         del lastSubmissions[id]
 
-def get_serial_number():
-    # return '0'
-    return '100000002f692899'
+
 
 def generate_random_id(length=10):
     letters = string.ascii_lowercase
@@ -96,15 +100,14 @@ async def testEnv(scannerId:str):
     else:
         response = sendToDb(scannerId, braceletId, timestamp)
         sendToConnectedClients(scannerId, braceletId,'SCAN_COMPLETE', response)
-    await asyncio.sleep(0.5)  # wait for 1 second before generating the next ID
+    await asyncio.sleep(10)  # wait for 1 second before generating the next ID
 
 async def handler(websocket):
-    # global connected, waitTime, last_submissions
+    global scannerId
     try:
         if connected:
             logging.debug('\n Clearing connections\n ')
             connected.clear()
-        scannerId = get_serial_number()
         logging.debug('\n Connected: %s\n ', websocket.remote_address)
         logging.info('\n Scanner ID: %s\n ', scannerId)
         connected.add(websocket)

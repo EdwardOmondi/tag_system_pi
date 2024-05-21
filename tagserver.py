@@ -13,6 +13,16 @@ logging.basicConfig(level=loggerLevel)
 waitTime = 5
 last_submissions = {}
 
+def get_serial_number():
+    cpuinfo = subprocess.run(['cat', '/proc/cpuinfo'], capture_output=True, text=True).stdout
+    for line in cpuinfo.split('\n'):
+        logging.debug('\n Line: %s\n ', line)
+        if line.startswith('Serial'):
+            logging.debug('\n Serial: %s\n ', line.split(':')[1].strip())
+            return line.split(':')[1].strip()
+        
+scannerId = get_serial_number()
+
 def remove_old_submissions(lastSubmissions):
     logging.debug('\n Removing old submissions\n ')
     current_time = time.time() * 1000
@@ -104,12 +114,11 @@ async def usbScanner(scannerId:str):
                         braceletId += key_event.keycode[-1]
 
 async def handler(websocket):
-    # global connected, waitTime, last_submissions
+    global scannerId
     try:
         if connected:
             logging.debug('\n Clearing connections\n ')
             connected.clear()
-        scannerId = get_serial_number()
         logging.debug('\n Connected: %s\n ', websocket.remote_address)
         logging.info('\n Scanner ID: %s\n ', scannerId)
         connected.add(websocket)
