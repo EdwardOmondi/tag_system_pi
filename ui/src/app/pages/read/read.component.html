@@ -1,44 +1,35 @@
-@if (showSuccessMessage) {
-<div class="absolute top-0 left-0 z-auto flex w-full justify-center">
-  <app-dialog [data]="cloudResponse"></app-dialog>
-</div>
-} @if (showTempMessage) {
-<div class="absolute top-0 left-0 z-auto flex w-full justify-center">
-  <app-pending
-    [pendingMessage]="'Scan done. Checking details...'"
-  ></app-pending>
-</div>
-} @if (showSuccessVideo) {
-<video
-  (ended)="vidEnded()"
-  class="min-w-full min-h-full m-auto"
-  [autoplay]="true"
-  src="../../../../../assets/video2.mp4"
-  type="video/mp4"
-  oncanplay="this.play()"
-  onloadedmetadata="this.muted = true"
-></video>
-} @if (!showSuccessVideo) {
-<video
-  class="min-w-full min-h-full m-auto"
-  [autoplay]="true"
-  loop
-  src="./../../../assets/video1.mp4"
-  type="video/mp4"
-  oncanplay="this.play()"
-  onloadedmetadata="this.muted = true"
-></video>
-}
-<!-- <div class="relative isolate px-6 pt-14 lg:px-8">
-  <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-    <div class="text-center">
-      <h1
-        class="animate-heartbeat text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
-      >
-        Hi There. Scan your bracelet
-      </h1>
-      <p>{{ scannerId }}</p>
-    </div>
+<div class="bg">
+  @if (showSuccessMessage) {
+  <div class="absolute top-0 left-0 z-auto flex w-full justify-center">
+    <app-dialog [data]="cloudResponse"></app-dialog>
   </div>
-</div> -->
-<!-- <button (click)="reconnect()">Reconnect</button> -->
+  } @if (showTempMessage) {
+  <div class="absolute top-0 left-0 z-auto flex w-full justify-center">
+    <app-pending
+      [pendingMessage]="'Scan done. Checking details...'"
+    ></app-pending>
+  </div>
+  } @if (!showSuccessVideo) {
+  <video
+    class="min-w-full min-h-full m-auto"
+    [autoplay]="true"
+    loop
+    src="assets/video1.mp4"
+    type="video/mp4"
+    oncanplay="this.play()"
+    onloadedmetadata="this.muted = true"
+  ></video>
+  <!-- poster="./../../../assets/bg1.png" -->
+  }@else{
+  <video
+    (ended)="vidEnded()"
+    class="min-w-full min-h-full m-auto"
+    [autoplay]="true"
+    src="assets/video2.mp4"
+    type="video/mp4"
+    oncanplay="this.play()"
+    onloadedmetadata="this.muted = true"
+  ></video>
+  <!-- poster="./../../../assets/bg1.png" -->
+  }
+</div>
