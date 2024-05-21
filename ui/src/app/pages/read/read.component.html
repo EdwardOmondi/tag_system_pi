@@ -18,7 +18,7 @@
   oncanplay="this.play()"
   onloadedmetadata="this.muted = true"
 ></video>
-} @else {
+} @if (!showSuccessVideo) {
 <video
   class="min-w-full min-h-full m-auto"
   [autoplay]="true"

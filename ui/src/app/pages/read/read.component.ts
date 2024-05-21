@@ -76,10 +76,6 @@ export class ReadComponent implements OnInit {
             this.cloudResponse = parsedData;
             this.showSuccessMessage = true;
             this.showSuccessVideo = true;
-            // setTimeout(() => {
-            //   this.showSuccessMessage = false;
-            //   this.showSuccessVideo = false;
-            // }, environment.defaultTimeout);
           }
           break;
         }
