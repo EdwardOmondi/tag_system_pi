@@ -99,7 +99,7 @@ async def usbScanner(scannerId:str):
                         else:
                             response = sendToDb(scannerId, braceletId, timestamp)
                             sendToConnectedClients(scannerId, braceletId,'SCAN_COMPLETE', response)                                           
-                        braceletId = ""
+                        break
                     else:
                         braceletId += key_event.keycode[-1]
 
