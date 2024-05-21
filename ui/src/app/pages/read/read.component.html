@@ -1,9 +1,5 @@
-<div class="bg">
-  @if (showSuccessMessage) {
-  <div class="absolute top-0 left-0 z-auto flex w-full justify-center">
-    <app-dialog [data]="cloudResponse"></app-dialog>
-  </div>
-  } @if (showTempMessage) {
+<!-- <div class="bg"> -->
+   @if (showTempMessage) {
   <div class="absolute top-0 left-0 z-auto flex w-full justify-center">
     <app-pending
       [pendingMessage]="'Scan done. Checking details...'"
@@ -32,4 +28,4 @@
     poster="assets/bg.png"
   ></video>
   }
-</div>
+<!-- </div> -->

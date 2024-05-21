@@ -19,14 +19,12 @@ export class ReadComponent implements OnInit {
   data: PiResponse | null = null;
   cloudResponse: CloudResponse | null = null;
   showTempMessage = false;
-  showSuccessMessage = false;
   showSuccessVideo = false;
 
   vidEnded() {
     console.log('vid ended');
     this.data = null;
     this.cloudResponse = null;
-    this.showSuccessMessage = false;
     this.showSuccessVideo = false;
     this.showTempMessage = false;
   }
@@ -35,7 +33,6 @@ export class ReadComponent implements OnInit {
     this.networkingService.connect();
     this.networkingService.data.subscribe((response) => {
       // this.showTempMessage = false;
-      // this.showSuccessMessage = false;
       // this.showSuccessVideo = false;
       const data = response as PiResponse;
       if (data === null) {
@@ -50,7 +47,6 @@ export class ReadComponent implements OnInit {
         case 'INITIAL_SCAN': {
           // console.log('initial scan', data);
           this.showTempMessage = true;
-          this.showSuccessMessage = false;
           this.showSuccessVideo = false;
           break;
         }
@@ -74,7 +70,6 @@ export class ReadComponent implements OnInit {
           if (parsedData.Result === 1) {
             console.log(parsedData.data, 'parsedData');
             this.cloudResponse = parsedData;
-            this.showSuccessMessage = true;
             this.showSuccessVideo = true;
           }
           break;
