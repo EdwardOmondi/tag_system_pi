@@ -13,6 +13,7 @@ export class NetworkingService {
   private _data = new BehaviorSubject<PiResponse | null>(null);
   private _pendingData = new BehaviorSubject<CloudResponse | null>(null);
   private _wsUrl = new BehaviorSubject<string>(environment.wsUrl);
+  private _wsRetryCounter = 0;
 
   public set wsUrl(v: string) {
     this._wsUrl.next(v);
@@ -84,7 +85,18 @@ export class NetworkingService {
         ).scanner_id;
       };
       websocket.onerror = (event: Event) => {
-        this.addError(`Connection error: ${event.currentTarget}`);
+        if ('error' in event) {
+          console.log(`WebSocket error: ${event.error}`);
+        } else {
+
+          console.log(`WebSocket event error: ${event}`);
+          if (this._wsActive.value === false && this._wsRetryCounter < 50) {
+            this.connect();
+            this._wsRetryCounter++;
+          }
+        }
+        // this.addError(`Connection error: ${event.currentTarget}`);
+        return;
       };
       websocket.onclose = () => {
         if (this._wsActive.value) {

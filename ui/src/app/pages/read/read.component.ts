@@ -28,15 +28,15 @@ export class ReadComponent implements OnInit {
     this.cloudResponse = null;
     this.showSuccessMessage = false;
     this.showSuccessVideo = false;
+    this.showTempMessage = false;
   }
 
   ngOnInit() {
     this.networkingService.connect();
-
     this.networkingService.data.subscribe((response) => {
-      this.showTempMessage = false;
-      this.showSuccessMessage = false;
-      this.showSuccessVideo = false;
+      // this.showTempMessage = false;
+      // this.showSuccessMessage = false;
+      // this.showSuccessVideo = false;
       const data = response as PiResponse;
       if (data === null) {
         return;
@@ -53,6 +53,7 @@ export class ReadComponent implements OnInit {
           break;
         }
         case 'TOO_SOON': {
+          this.showTempMessage = false;
           console.log('too soon', data);
           this.networkingService.addError(
             `You must wait at least 5 seconds before scanning again`
@@ -60,6 +61,7 @@ export class ReadComponent implements OnInit {
           break;
         }
         case 'SCAN_COMPLETE': {
+          this.showTempMessage = false;
           console.log('scan complete', data);
           const innerData = JSON.parse(data.response); // Parse the response string once
           const parsedData = JSON.parse(innerData) as CloudResponse; // Parse the response string
@@ -80,6 +82,7 @@ export class ReadComponent implements OnInit {
           break;
         }
         case 'DISCONNECTED': {
+          this.showTempMessage = false;
           console.log('disconnected', data);
           this.networkingService.addError(
             `Scanner ${data.scanner_id} has disconnected`
