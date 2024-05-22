@@ -84,7 +84,7 @@ def sendToDb(scannerId:str, braceletId:str, timestamp:int):
     formData = {
                 'bracelet_id': braceletId,
                 'scanner_id': scannerId
-    }
+                }
     liveUrl='https://mobileappstarter.com/dashboards/kidzquad/apitest/user/scan_bracelet'
     response = requests.post(liveUrl, data=formData)
     return response
@@ -100,7 +100,7 @@ async def testEnv(scannerId:str):
     else:
         response = sendToDb(scannerId, braceletId, timestamp)
         sendToConnectedClients(scannerId, braceletId,'SCAN_COMPLETE', response)
-    await asyncio.sleep(10)  # wait for 1 second before generating the next ID
+    await asyncio.sleep(5)  # wait for 1 second before generating the next ID
 
 async def handler(websocket):
     global scannerId

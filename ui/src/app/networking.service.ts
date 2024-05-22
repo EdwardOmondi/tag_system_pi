@@ -70,7 +70,6 @@ export class NetworkingService {
 
   connect() {
     this._wsUrl.subscribe((url) => {
-      console.log('connect', 'url', url);
       const websocket = new WebSocket(url);
       websocket.onopen = () => {
         this.updateWsState = true;
@@ -86,10 +85,7 @@ export class NetworkingService {
       };
       websocket.onerror = (event: Event) => {
         if ('error' in event) {
-          console.log(`WebSocket error: ${event.error}`);
         } else {
-
-          console.log(`WebSocket event error: ${event}`);
           if (this._wsActive.value === false && this._wsRetryCounter < 50) {
             this.connect();
             this._wsRetryCounter++;
@@ -101,7 +97,6 @@ export class NetworkingService {
       websocket.onclose = () => {
         if (this._wsActive.value) {
           this.updateWsState = false;
-          console.log(`Websocket closed`);
           this.connect();
         }
       };

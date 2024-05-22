@@ -22,7 +22,6 @@ export class ReadComponent implements OnInit {
   showSuccessVideo = false;
 
   vidEnded() {
-    console.log('vid ended');
     this.data = null;
     this.cloudResponse = null;
     this.showSuccessVideo = false;
@@ -41,18 +40,15 @@ export class ReadComponent implements OnInit {
       this.networkingService.updateScannerId = data.scanner_id;
       switch (data.status) {
         case 'INITIAL_CONNECTION': {
-          console.log('initial connection', data);
           break;
         }
         case 'INITIAL_SCAN': {
-          // console.log('initial scan', data);
           this.showTempMessage = true;
           this.showSuccessVideo = false;
           break;
         }
         case 'TOO_SOON': {
           this.showTempMessage = false;
-          console.log('too soon', data);
           this.networkingService.addError(
             `You must wait at least 5 seconds before scanning again`
           );
@@ -60,15 +56,13 @@ export class ReadComponent implements OnInit {
         }
         case 'SCAN_COMPLETE': {
           this.showTempMessage = false;
-          console.log('scan complete', data);
           const innerData = JSON.parse(data.response); // Parse the response string once
           const parsedData = JSON.parse(innerData) as CloudResponse; // Parse the response string
-          console.log(parsedData.Result, 'parsedData');
           if (parsedData.Result === 0) {
+            this.showSuccessVideo = true;
             this.networkingService.addError(`${parsedData.Message}`);
           }
           if (parsedData.Result === 1) {
-            console.log(parsedData.data, 'parsedData');
             this.cloudResponse = parsedData;
             this.showSuccessVideo = true;
           }
@@ -76,7 +70,6 @@ export class ReadComponent implements OnInit {
         }
         case 'DISCONNECTED': {
           this.showTempMessage = false;
-          console.log('disconnected', data);
           this.networkingService.addError(
             `Scanner ${data.scanner_id} has disconnected`
           );
