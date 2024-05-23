@@ -117,14 +117,9 @@ cd ~/tag_system_pi
 Run the commands below to setup the UI
 
 ```bash
-cd ~/tag_system_pi/
-sudo cp browser.zip /var/www/html/
-cd /var/www/html/
-sudo unzip browser.zip
-sudo cp -r browser/* /var/www/html/
-sudo rm -rf browser*
-sudo service nginx restart
-cd ~/tag_system_pi/
+cd ~/tag_system_pi
+chmod u+x deploy.sh
+./deploy.sh
 ```
 All done!
 
